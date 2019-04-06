@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -33,19 +34,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+exports.__esModule = true;
 var puppeteer = require('puppeteer');
 var path = require('path');
 var findChrome = require('./../lib/find_chrome.js');
 var config = require('./../config.js');
 var message = require('./../lib/message.js');
-var chatHandler = require("./chat_handler");
+var chat_handler_1 = require("./chat_handler");
+var moment = require("moment");
 // catch un-handled promise errors
 process.on("unhandledRejection", function (reason, p) {
     //console.warn("Unhandled Rejection at: Promise", p, "reason:", reason);
 });
 (function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var executablePath, headless, browser, page;
+        var executablePath, headless, browser, page, sent, startTime, unreads, _i, unreads_1, unread, text;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -91,7 +94,52 @@ process.on("unhandledRejection", function (reason, p) {
                 case 4:
                     _a.sent();
                     console.log('IN');
-                    return [2 /*return*/];
+                    sent = new Map();
+                    startTime = moment.utc();
+                    _a.label = 5;
+                case 5:
+                    if (!true) return [3 /*break*/, 12];
+                    console.log("Started " + startTime.fromNow());
+                    return [4 /*yield*/, page.$eval('#pane-side', function (ps) {
+                            return Array.from(ps.firstChild.firstChild.firstChild.childNodes || {})
+                                .map(function (c) {
+                                return {
+                                    num: c.lastChild.lastChild.lastChild.lastChild.lastChild.textContent,
+                                    name: c.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.title
+                                };
+                            })
+                                .filter(function (c) { return parseInt(c.num) > 0 && c.name.length > 0; });
+                        })];
+                case 6:
+                    unreads = _a.sent();
+                    console.log('unreads', unreads.filter(function (u) { return !sent.has(u.name); }));
+                    _i = 0, unreads_1 = unreads;
+                    _a.label = 7;
+                case 7:
+                    if (!(_i < unreads_1.length)) return [3 /*break*/, 10];
+                    unread = unreads_1[_i];
+                    if (sent.has(unread.name)) {
+                        console.log("Message to " + unread.name + " already sent");
+                        return [3 /*break*/, 9];
+                    }
+                    text = message.generate(unread.name);
+                    return [4 /*yield*/, chat_handler_1["default"].sendMessage(page, unread.name, text)];
+                case 8:
+                    if (_a.sent()) {
+                        sent.set(unread.name, moment.utc());
+                    }
+                    else {
+                        console.log("Failed message to " + unread.name);
+                    }
+                    _a.label = 9;
+                case 9:
+                    _i++;
+                    return [3 /*break*/, 7];
+                case 10: return [4 /*yield*/, page.waitFor(30000)];
+                case 11:
+                    _a.sent();
+                    return [3 /*break*/, 5];
+                case 12: return [2 /*return*/];
             }
         });
     });

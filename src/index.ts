@@ -5,7 +5,9 @@ const findChrome = require('./../lib/find_chrome.js');
 const config = require('./../config.js');
 const message = require('./../lib/message.js');
 
-const chatHandler = require("./chat_handler");
+import chatHandler from "./chat_handler";
+
+import * as moment from "moment";
 
 // catch un-handled promise errors
 process.on("unhandledRejection", (reason, p) => {
@@ -54,10 +56,11 @@ process.on("unhandledRejection", (reason, p) => {
     await page.waitForSelector('#pane-side');
 
     console.log('IN');
-
+    const sent = new Map();
+    const startTime = moment.utc();
     //check cell updates and reply
-    /* while (true) {
-        console.log('LOOP');
+    while (true) {
+        console.log(`Started ${startTime.fromNow()}`);
         const unreads = await page.$eval('#pane-side', (ps) => {
             return Array.from(ps.firstChild.firstChild.firstChild.childNodes || {})
                 .map((c : any) => {
@@ -66,13 +69,21 @@ process.on("unhandledRejection", (reason, p) => {
                         name: c.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.title
                     }
                 })
-                .filter(c => parseInt(c.num) > 0)
+                .filter((c: any) => parseInt(c.num) > 0 && c.name.length > 0)
         });
-        console.log('unreads', unreads);
+        console.log('unreads', unreads.filter(u=>!sent.has(u.name)));
         for (const unread of unreads) {
+            if (sent.has(unread.name)) {
+                console.log(`Message to ${unread.name} already sent`);
+                continue;
+            }
             const text = message.generate(unread.name);
-            await chatHandler.sendMessage(page, unread.name, text);
+            if (await chatHandler.sendMessage(page, unread.name, text)) {
+                sent.set(unread.name, moment.utc());
+            } else {
+                console.log(`Failed message to ${unread.name}`);
+            }
         }
-        await page.waitFor(10000);
-    } */
+        await page.waitFor(30000);
+    }
 })();

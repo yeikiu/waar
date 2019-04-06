@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -34,12 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-module.exports = {
+exports.__esModule = true;
+exports["default"] = {
     sendMessage: function (page, name, text) { return __awaiter(_this, void 0, void 0, function () {
-        var userSelector, titleName, parts, i;
+        var userSelector, titleName, parts, i, e_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    _a.trys.push([0, 15, , 16]);
                     userSelector = "#pane-side span[title=\"" + name + "\"]";
                     return [4 /*yield*/, page.waitFor(userSelector)];
                 case 1:
@@ -58,7 +61,7 @@ module.exports = {
                     titleName = _a.sent();
                     if (titleName !== name) {
                         console.log("Can't load chat with " + name);
-                        return [2 /*return*/];
+                        return [2 /*return*/, false];
                     }
                     parts = text.split('\n');
                     i = 0;
@@ -88,7 +91,11 @@ module.exports = {
                 case 14:
                     _a.sent();
                     console.log('Sent to ', name);
-                    return [2 /*return*/];
+                    return [2 /*return*/, true];
+                case 15:
+                    e_1 = _a.sent();
+                    return [2 /*return*/, false];
+                case 16: return [2 /*return*/];
             }
         });
     }); }
