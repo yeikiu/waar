@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const path = require('path');
 
 const findChrome = require('./../lib/find_chrome.js');
 const config = require('./../config.js');
@@ -16,13 +17,12 @@ process.on("unhandledRejection", (reason, p) => {
     // Login and wait to load
     //
     const executablePath = findChrome().pop() || null;
-    const tmpPath = config.data_dir;
     const headless = !config.window;
 
     const browser = await puppeteer.launch({
         headless: headless,
         executablePath: executablePath,
-        userDataDir: tmpPath,
+        userDataDir: path.resolve(__dirname, config.data_dir),
         ignoreHTTPSErrors: true,
         args: [
             '--log-level=3', // fatal only
@@ -56,7 +56,7 @@ process.on("unhandledRejection", (reason, p) => {
     console.log('IN');
 
     //check cell updates and reply
-    while (true) {
+    /* while (true) {
         console.log('LOOP');
         const unreads = await page.$eval('#pane-side', (ps) => {
             return Array.from(ps.firstChild.firstChild.firstChild.childNodes || {})
@@ -74,5 +74,5 @@ process.on("unhandledRejection", (reason, p) => {
             await chatHandler.sendMessage(page, unread.name, text);
         }
         await page.waitFor(10000);
-    }
+    } */
 })();

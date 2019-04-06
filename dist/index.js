@@ -34,6 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var puppeteer = require('puppeteer');
+var path = require('path');
 var findChrome = require('./../lib/find_chrome.js');
 var config = require('./../config.js');
 var message = require('./../lib/message.js');
@@ -44,17 +45,16 @@ process.on("unhandledRejection", function (reason, p) {
 });
 (function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var executablePath, tmpPath, headless, browser, page, unreads, _i, unreads_1, unread, text;
+        var executablePath, headless, browser, page;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     executablePath = findChrome().pop() || null;
-                    tmpPath = config.data_dir;
                     headless = !config.window;
                     return [4 /*yield*/, puppeteer.launch({
                             headless: headless,
                             executablePath: executablePath,
-                            userDataDir: tmpPath,
+                            userDataDir: path.resolve(__dirname, config.data_dir),
                             ignoreHTTPSErrors: true,
                             args: [
                                 '--log-level=3',
@@ -91,41 +91,7 @@ process.on("unhandledRejection", function (reason, p) {
                 case 4:
                     _a.sent();
                     console.log('IN');
-                    _a.label = 5;
-                case 5:
-                    if (!true) return [3 /*break*/, 12];
-                    console.log('LOOP');
-                    return [4 /*yield*/, page.$eval('#pane-side', function (ps) {
-                            return Array.from(ps.firstChild.firstChild.firstChild.childNodes || {})
-                                .map(function (c) {
-                                return {
-                                    num: c.lastChild.lastChild.lastChild.lastChild.lastChild.textContent,
-                                    name: c.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.title
-                                };
-                            })
-                                .filter(function (c) { return parseInt(c.num) > 0; });
-                        })];
-                case 6:
-                    unreads = _a.sent();
-                    console.log('unreads', unreads);
-                    _i = 0, unreads_1 = unreads;
-                    _a.label = 7;
-                case 7:
-                    if (!(_i < unreads_1.length)) return [3 /*break*/, 11];
-                    unread = unreads_1[_i];
-                    text = message.generate(unread.name);
-                    return [4 /*yield*/, chatHandler.sendMessage(page, unread.name, text)];
-                case 8:
-                    _a.sent();
-                    return [4 /*yield*/, chatHandler.sendMessage(page, "Myself", JSON.stringify(unread))];
-                case 9:
-                    _a.sent();
-                    _a.label = 10;
-                case 10:
-                    _i++;
-                    return [3 /*break*/, 7];
-                case 11: return [3 /*break*/, 5];
-                case 12: return [2 /*return*/];
+                    return [2 /*return*/];
             }
         });
     });
