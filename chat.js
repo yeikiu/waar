@@ -70,7 +70,7 @@ process.on("unhandledRejection", (reason, p) => {
 
     const browser = await puppeteer.launch({
       headless: headless,
-      //executablePath: executablePath,
+      executablePath: executablePath,
       userDataDir: tmpPath,
       ignoreHTTPSErrors: true,
       args: [
@@ -94,7 +94,7 @@ process.on("unhandledRejection", (reason, p) => {
     });
 
     const page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3641.0 Safari/537.36');
+    //await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36');
 
     //await page.setViewport({width: 1366, height:768});
     await page.setRequestInterception(true);
@@ -105,10 +105,10 @@ process.on("unhandledRejection", (reason, p) => {
 
     print(gradient.rainbow('Initializing...\n'));
 
-    page.goto('https://web.whatsapp.com/', {
+    await page.goto('https://web.whatsapp.com/', {
       waitUntil: 'networkidle2',
       timeout: 0
-    }).then(async function (response) {
+    });
 
       await page.waitFor(networkIdleTimeout);
 
@@ -128,10 +128,29 @@ process.on("unhandledRejection", (reason, p) => {
         process.exit();
       }
 
-      startChat(user);
+      // startChat(user);
 
-      readCommands();
-    })
+      // readCommands();
+      console.log('doLoop', await doLoop());
+
+    async function doLoop() {
+      console.log('IN2');
+      const cells= await page.$eval('#pane-side',(ps) => { 
+        //console.log('test', Array.from(ps.firstChild.firstChild.firstChild.children));
+          return Array.from(ps.firstChild.firstChild.firstChild.childNodes)
+            .map(c=>{return {
+              num:c.lastChild.lastChild.lastChild.lastChild.lastChild.textContent,
+              name: c.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.title
+            }})
+            .filter(c=>parseInt(c.num) > 0)
+          return boxes;
+      });
+      /* for(const cell of cells) {
+        page.click(cell.elem);
+        page.waitFor(5000);
+      } */
+      return cells;
+    }
 
     // allow user to type on console and read it
     function readCommands() {
@@ -426,8 +445,8 @@ process.on("unhandledRejection", (reason, p) => {
       }
     }
 
-    setInterval(readLastOtherPersonMessage, (config.check_message_interval));
-    setInterval(checkNewMessagesAllUsers, (config.check_message_interval));
+    //setInterval(readLastOtherPersonMessage, (config.check_message_interval));
+    //setInterval(checkNewMessagesAllUsers, (config.check_message_interval));
 
   } catch (err) {
     logger.warn(err);

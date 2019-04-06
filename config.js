@@ -8,7 +8,7 @@ module.exports = {
     // authorize this application every time.
     // NOTE: This directory can get quite large overtime, in that case simply delete it
     // and re-authorize Whatsapp.
-    data_dir: './tmp',
+    data_dir: './../tmp',
     
     // When true, Chrome browser window will be shown. When false, it will be hidden	
     window: true,    
