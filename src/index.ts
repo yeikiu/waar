@@ -43,29 +43,14 @@ process.on("unhandledRejection", (reason, p) => {
         userDataDir: path.resolve(__dirname, config.data_dir),
         ignoreHTTPSErrors: true,
         args: [
-            '--log-level=3', // fatal only
-            //'--start-maximized',
-            '--no-default-browser-check',
-            '--disable-infobars',
-            '--disable-web-security',
-            '--disable-site-isolation-trials',
-            '--no-experiments',
-            '--ignore-gpu-blacklist',
-            '--ignore-certificate-errors',
-            '--ignore-certificate-errors-spki-list',
-            '--disable-gpu',
-            '--disable-extensions',
-            '--disable-default-apps',
-            '--enable-features=NetworkService',
-            '--disable-setuid-sandbox',
-            '--no-sandbox',
+            '--window-size=1920x800',
             //'--incognito'
         ]
     });
 
     const page = (await browser.pages())[0];
     page.setViewport({width: 1280, height: 800});
-    //await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
+    // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
     await page.goto('https://web.whatsapp.com/', {
         waitUntil: 'networkidle2',
         timeout: 0
@@ -83,7 +68,7 @@ process.on("unhandledRejection", (reason, p) => {
     //debug(`title`, title);
     // this means browser upgrade warning came up for some reasons
     if (title && title.includes('Google Chrome 36+')) {
-        logError(`Can't open whatsapp web, most likely got browser upgrade message....`);
+        logError(`Can't open whatsapp web in headless mode, falling back to window mode....`);
         try {
             rimraf.sync(path.resolve(__dirname, config.data_dir));
             await page.reload();

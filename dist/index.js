@@ -87,22 +87,7 @@ process.on("unhandledRejection", function (reason, p) {
                             userDataDir: path.resolve(__dirname, config.data_dir),
                             ignoreHTTPSErrors: true,
                             args: [
-                                '--log-level=3',
-                                //'--start-maximized',
-                                '--no-default-browser-check',
-                                '--disable-infobars',
-                                '--disable-web-security',
-                                '--disable-site-isolation-trials',
-                                '--no-experiments',
-                                '--ignore-gpu-blacklist',
-                                '--ignore-certificate-errors',
-                                '--ignore-certificate-errors-spki-list',
-                                '--disable-gpu',
-                                '--disable-extensions',
-                                '--disable-default-apps',
-                                '--enable-features=NetworkService',
-                                '--disable-setuid-sandbox',
-                                '--no-sandbox',
+                                '--window-size=1920x800',
                             ]
                         })];
                 case 1:
@@ -111,13 +96,13 @@ process.on("unhandledRejection", function (reason, p) {
                 case 2:
                     page = (_b.sent())[0];
                     page.setViewport({ width: 1280, height: 800 });
-                    //await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
+                    // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
                     return [4 /*yield*/, page.goto('https://web.whatsapp.com/', {
                             waitUntil: 'networkidle2',
                             timeout: 0
                         })];
                 case 3:
-                    //await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
+                    // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
                     _b.sent();
                     title = null;
                     return [4 /*yield*/, page.waitForSelector('.landing-title', { timeout: 8000 })];
@@ -140,7 +125,7 @@ process.on("unhandledRejection", function (reason, p) {
                 case 8:
                     ;
                     if (!(title && title.includes('Google Chrome 36+'))) return [3 /*break*/, 14];
-                    logError("Can't open whatsapp web, most likely got browser upgrade message....");
+                    logError("Can't open whatsapp web in headless mode, falling back to window mode....");
                     _b.label = 9;
                 case 9:
                     _b.trys.push([9, 12, , 13]);
