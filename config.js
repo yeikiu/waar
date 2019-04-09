@@ -11,5 +11,9 @@ module.exports = {
     data_dir: '_tmp',
     
     // When true, Chrome browser window will be shown. When false, it will be hidden	
-    window: false,    
+    window: false,
+    
+    min_minutes_between_messages: 5, // minutes
+
+    check_interval_seconds: 25 // seconds
 }

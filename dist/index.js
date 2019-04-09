@@ -47,7 +47,7 @@ var chat_handler_1 = require("./handlers/chat_handler");
 var moment = require("moment");
 // catch un-handled promise errors
 process.on("unhandledRejection", function (reason, p) {
-    logError("Unhandled Rejection at: Promise", p, "reason:", reason);
+    //logError("Unhandled Rejection at: Promise", p, "reason:", reason);
 });
 (function main() {
     return __awaiter(this, void 0, void 0, function () {
@@ -143,17 +143,17 @@ process.on("unhandledRejection", function (reason, p) {
                                 };
                             })
                                 .filter(function (c) { return parseInt(c.num) > 0 && c.name.length > 0; });
-                        }, sent)];
+                        })];
                 case 16:
                     unreads = _b.sent();
-                    _i = 0, _a = unreads.filter(function (u) { return !sent.has(u.name); });
+                    _i = 0, _a = unreads.filter(function (u) { return !sent.has(u.name) || moment.utc().diff(sent.get(u.name), 'minutes') >= config.min_minutes_between_messages; });
                     _b.label = 17;
                 case 17:
                     if (!(_i < _a.length)) return [3 /*break*/, 20];
                     unread = _a[_i];
                     if (sent.has(unread.name)) {
                         console.log("Message to " + unread.name + " already sent");
-                        return [3 /*break*/, 19];
+                        debug(moment.utc().diff(sent.get(unread.name), 'minutes'));
                     }
                     text = chat_handler_1.default.generateMessage(unread.name);
                     return [4 /*yield*/, chat_handler_1.default.sendMessage(page, unread.name, text)];
@@ -168,7 +168,7 @@ process.on("unhandledRejection", function (reason, p) {
                 case 19:
                     _i++;
                     return [3 /*break*/, 17];
-                case 20: return [4 /*yield*/, page.waitFor(10000)];
+                case 20: return [4 /*yield*/, page.waitFor(config.check_interval_seconds * 1000)];
                 case 21:
                     _b.sent();
                     return [3 /*break*/, 15];

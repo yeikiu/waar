@@ -14,7 +14,7 @@ import * as moment from "moment";
 
 // catch un-handled promise errors
 process.on("unhandledRejection", (reason, p) => {
-    logError("Unhandled Rejection at: Promise", p, "reason:", reason);
+    //logError("Unhandled Rejection at: Promise", p, "reason:", reason);
 });
 
 (async function main() {
@@ -65,7 +65,7 @@ process.on("unhandledRejection", (reason, p) => {
         });
 
     } catch (e) { };
-    debug('title', title);
+    
     // this means browser upgrade warning came up for some reasons
     if (title && title.includes('Google Chrome 36+')) {
         logError(`Can't open whatsapp web, most likely got browser upgrade message....`);
@@ -104,11 +104,12 @@ process.on("unhandledRejection", (reason, p) => {
                     }
                 })
                 .filter((c: any) => parseInt(c.num) > 0 && c.name.length > 0)
-        }, sent);
-        for (const unread of unreads.filter(u => !sent.has(u.name))) {
+        });
+
+        for (const unread of unreads.filter(u => !sent.has(u.name) || moment.utc().diff(sent.get(u.name), 'minutes') >= config.min_minutes_between_messages )) {
             if (sent.has(unread.name)) {
                 console.log(`Message to ${unread.name} already sent`);
-                continue;
+                debug(moment.utc().diff(sent.get(unread.name), 'minutes'));
             }
             const text = chatHandler.generateMessage(unread.name);
             if (await chatHandler.sendMessage(page, unread.name, text)) {
@@ -117,6 +118,6 @@ process.on("unhandledRejection", (reason, p) => {
                 console.log(`Failed message to ${unread.name}`);
             }
         }
-        await page.waitFor(10000);
+        await page.waitFor(config.check_interval_seconds * 1000);
     }
 })();

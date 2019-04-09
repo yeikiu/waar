@@ -19,34 +19,12 @@ Tested on MacOS X with Node v8.9.1 and puppeteer v0.13.0
 ## Installation ##
 
 - Clone this repository. `git clone https://github.com/sarfraznawaz2005/whatspup.git`
-- Type `npm install`
-- Type `node chat.js USERNAME` (case-sensitive)
-- Chrome will open up, now just scan Whatsapp QR Code once via whatsapp app in your mobile
-- Wait for connection and start typing your messages :smile:
+- Type `yarn install`
+- Type `yarn start`
 
+- 1st time you run the waWeb QR code will appear so you can scan it and close the image. You can play with the config file to make Chrome window open up, change time intervals.
 
-**NOTE:** Once you have connected by scanning QR code, your session will be saved so you won't have to scan it again and again unless you revoke from whatsapp app or by deleting **tmp** folder. 
-
-## Commands ##
-
-**Changing User**
-
-You can switch chat with another user anytime by typing on console:
-`--chat USERNAME` (case-sensitive)
-
-**NOTE:** `USERNAME` is supposed to be a person with whom you have already initiated a conversation in whatsapp. In other words, we use a selector to click that user's name from conversations list.
-
-**Clear Chat Screen**
-
-To clear chat screen, type `--clear`.
-
-## Options ##
-
-You can set various options in `config.js` file.
-
-## Others ##
-
- - You can send common emojis directly by typing `:smile:`, `:lol:`, `:happy:`, `:love:`, `:wink:` OR `;-)`, `:-)`, `<3`, etc
+**NOTE:** Once you have connected by scanning QR code, your session will be saved so you won't have to scan it again and again unless you revoke from whatsapp app or by deleting **_tmp** folder. 
 
 ## Contribute ##
 
@@ -54,4 +32,4 @@ You are welcome to contribute to this project.
 
 ## Disclaimer ##
 
-This project is not affiliated with official whatsapp in any sense.
+This project is not affiliated with official WhatsApp in any sense.
