@@ -39,7 +39,7 @@ process.on("unhandledRejection", (reason, p) => {
 
     const browser = await puppeteer.launch({
         headless: headless,
-        //executablePath: executablePath,
+        executablePath: executablePath,
         userDataDir: path.resolve(__dirname, config.data_dir),
         ignoreHTTPSErrors: true,
         args: [
@@ -80,7 +80,7 @@ process.on("unhandledRejection", (reason, p) => {
         });
 
     } catch (e) { };
-    
+    //debug(`title`, title);
     // this means browser upgrade warning came up for some reasons
     if (title && title.includes('Google Chrome 36+')) {
         logError(`Can't open whatsapp web, most likely got browser upgrade message....`);
@@ -101,7 +101,7 @@ process.on("unhandledRejection", (reason, p) => {
         
         if (qrCode && !config.window) {
             //debug('qrCode', qrCode);
-            qrPath = `_tmp/lastqr.png`;
+            qrPath = `lastqr.png`;
             await (await page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')).screenshot({ path: qrPath });
             await open(qrPath);
             print(`Please scan the QR code with your phone's WhatsApp scanner.\nYou can close the image once scanned.`);

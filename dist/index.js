@@ -83,7 +83,7 @@ process.on("unhandledRejection", function (reason, p) {
                     headless = !config.window;
                     return [4 /*yield*/, puppeteer.launch({
                             headless: headless,
-                            //executablePath: executablePath,
+                            executablePath: executablePath,
                             userDataDir: path.resolve(__dirname, config.data_dir),
                             ignoreHTTPSErrors: true,
                             args: [
@@ -169,7 +169,7 @@ process.on("unhandledRejection", function (reason, p) {
                     qrCode = _b.sent();
                     if (!(qrCode && !config.window)) return [3 /*break*/, 20];
                     //debug('qrCode', qrCode);
-                    qrPath = "_tmp/lastqr.png";
+                    qrPath = "lastqr.png";
                     return [4 /*yield*/, page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')];
                 case 17: return [4 /*yield*/, (_b.sent()).screenshot({ path: qrPath })];
                 case 18:
