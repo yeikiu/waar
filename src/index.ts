@@ -1,17 +1,20 @@
+const debug = require('debug')(`wa-ar:${require('path').parse(__filename).name}`);
+const logError = require('debug')(`wa-ar:${require('path').parse(__filename).name}:error*`);
+const print = require('debug')(`wa-ar:${require('path').parse(__filename).name}*`);
+
 const puppeteer = require('puppeteer');
+const open = require("open");
 const path = require('path');
 
 const findChrome = require('./../lib/find_chrome.js');
 const config = require('./../config.js');
-const message = require('./../lib/message.js');
 
-import chatHandler from "./chat_handler";
-
+import chatHandler from "./handlers/chat_handler";
 import * as moment from "moment";
 
 // catch un-handled promise errors
 process.on("unhandledRejection", (reason, p) => {
-    //console.warn("Unhandled Rejection at: Promise", p, "reason:", reason);
+    logError("Unhandled Rejection at: Promise", p, "reason:", reason);
 });
 
 (async function main() {
@@ -42,48 +45,79 @@ process.on("unhandledRejection", (reason, p) => {
             '--disable-default-apps',
             '--enable-features=NetworkService',
             '--disable-setuid-sandbox',
-            '--no-sandbox'
+            '--no-sandbox',
+            //'--incognito'
         ]
-
     });
 
-    const page = await browser.newPage();
+    const page = (await browser.pages())[0];
+    //await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
     await page.goto('https://web.whatsapp.com/', {
         waitUntil: 'networkidle2',
         timeout: 0
     });
-    console.log('Waiting on #pane-side');
-    await page.waitForSelector('#pane-side');
 
-    console.log('IN');
+    let title = null;
+    try {
+        title = await page.$eval('.window-title', (t) => {
+            if (!t) return null;
+            return t.textContent;
+        });
+    
+    } catch (e) {};
+    debug('title', title);
+    // this means browser upgrade warning came up for some reasons
+    if (title && title.includes('Google Chrome 36+')) {
+        logError(`Can't open whatsapp web, most likely got browser upgrade message....`);
+        process.exit();
+    }
+    
+    // Check if we need to log-in
+    const awaitQR = page.waitForSelector('img[alt="Scan me!"]');
+    const awaitChats = page.waitForSelector('#pane-side');
+
+    await Promise.race([awaitQR, awaitChats]).then(async function(value) {
+        const qrCode = await page.$('img[alt="Scan me!"]');
+        if (qrCode) {
+            const qrPath = `lastqr.png`;
+            await (await page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')).screenshot({path: qrPath});
+            await open(qrPath);
+            print(`Please scan the QR code with your phone's WhatsApp scanner.\nYou can close the image once scanned.`);
+        }
+    });
+
+    debug('Waiting on #pane-side');
+    await page.waitForSelector('#pane-side');
     const sent = new Map();
     const startTime = moment.utc();
+
     //check cell updates and reply
     while (true) {
-        console.log(`Started ${startTime.fromNow()}`);
+        console.log(`Running for ${moment.utc().diff(startTime, 'seconds')} seconds`);
         const unreads = await page.$eval('#pane-side', (ps) => {
+            console.log('IN');
             return Array.from(ps.firstChild.firstChild.firstChild.childNodes || {})
-                .map((c : any) => {
+                .map((c: any) => {
                     return {
-                        num: c.lastChild.lastChild.lastChild.lastChild.lastChild.textContent,
-                        name: c.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.title
+                        isGroup: null, //TODO group detection
+                        num: c.lastChild.lastChild.lastChild.lastChild.lastChild.textContent || '0',
+                        name: c.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.title || ''
                     }
                 })
                 .filter((c: any) => parseInt(c.num) > 0 && c.name.length > 0)
-        });
-        console.log('unreads', unreads.filter(u=>!sent.has(u.name)));
-        for (const unread of unreads) {
+        }, sent);
+        for (const unread of unreads.filter(u => !sent.has(u.name))) {
             if (sent.has(unread.name)) {
                 console.log(`Message to ${unread.name} already sent`);
                 continue;
             }
-            const text = message.generate(unread.name);
+            const text = chatHandler.generateMessage(unread.name);
             if (await chatHandler.sendMessage(page, unread.name, text)) {
                 sent.set(unread.name, moment.utc());
             } else {
                 console.log(`Failed message to ${unread.name}`);
             }
         }
-        await page.waitFor(30000);
+        await page.waitFor(10000);
     }
 })();

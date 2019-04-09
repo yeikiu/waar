@@ -1,4 +1,16 @@
 export default {
+    generateMessage: (name) => `
+>> -- AUTO-REPLY -- <<
+
+Hola ${name}!
+                    
+En estos momentos no puedo atender al WhatsApp.
+
+Te escribo pronto! 🤓
+
+>> --- v0.0.1 (beta) --- <<
+`,
+
     sendMessage: async(page, name, text) => {
         try {
             const userSelector = `#pane-side span[title="${name}"]`;

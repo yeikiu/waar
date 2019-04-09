@@ -16,10 +16,13 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
+    "dotenv": "^7.0.0",
+    "minimist": "^1.2.0",
     "moment": "^2.24.0",
+    "open": "^6.1.0",
     "puppeteer": "^1.13.0"
   },
   "scripts": {
-    "start": "tsc && node dist/index.js"
+    "start": "tsc && DEBUG=wa-ar:* node dist/index.js"
   }
 }

@@ -35,8 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-exports.__esModule = true;
-exports["default"] = {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
     sendMessage: function (page, name, text) { return __awaiter(_this, void 0, void 0, function () {
         var userSelector, titleName, parts, i, e_1;
         return __generator(this, function (_a) {
