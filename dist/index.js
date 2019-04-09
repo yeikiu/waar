@@ -51,7 +51,7 @@ process.on("unhandledRejection", function (reason, p) {
 });
 (function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var executablePath, headless, browser, page, title, e_1, awaitQR, awaitChats, sent, startTime, unreads, _i, _a, unread, text;
+        var executablePath, headless, browser, page, title, e_1, awaitQR, awaitChats, qrCode, qrPath, sent, startTime, unreads, _i, _a, unread, text;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -64,21 +64,6 @@ process.on("unhandledRejection", function (reason, p) {
                             ignoreHTTPSErrors: true,
                             args: [
                                 '--log-level=3',
-                                //'--start-maximized',
-                                '--no-default-browser-check',
-                                '--disable-infobars',
-                                '--disable-web-security',
-                                '--disable-site-isolation-trials',
-                                '--no-experiments',
-                                '--ignore-gpu-blacklist',
-                                '--ignore-certificate-errors',
-                                '--ignore-certificate-errors-spki-list',
-                                '--disable-gpu',
-                                '--disable-extensions',
-                                '--disable-default-apps',
-                                '--enable-features=NetworkService',
-                                '--disable-setuid-sandbox',
-                                '--no-sandbox',
                             ]
                         })];
                 case 1:
@@ -117,43 +102,35 @@ process.on("unhandledRejection", function (reason, p) {
                         logError("Can't open whatsapp web, most likely got browser upgrade message....");
                         process.exit();
                     }
-                    awaitQR = page.waitForSelector('img[alt="Scan me!"]');
-                    awaitChats = page.waitForSelector('#pane-side');
-                    return [4 /*yield*/, Promise.race([awaitQR, awaitChats]).then(function (value) {
-                            return __awaiter(this, void 0, void 0, function () {
-                                var qrCode, qrPath;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, page.$('img[alt="Scan me!"]')];
-                                        case 1:
-                                            qrCode = _a.sent();
-                                            if (!qrCode) return [3 /*break*/, 5];
-                                            qrPath = "lastqr.png";
-                                            return [4 /*yield*/, page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')];
-                                        case 2: return [4 /*yield*/, (_a.sent()).screenshot({ path: qrPath })];
-                                        case 3:
-                                            _a.sent();
-                                            return [4 /*yield*/, open(qrPath)];
-                                        case 4:
-                                            _a.sent();
-                                            print("Please scan the QR code with your phone's WhatsApp scanner.\nYou can close the image once scanned.");
-                                            _a.label = 5;
-                                        case 5: return [2 /*return*/];
-                                    }
-                                });
-                            });
-                        })];
+                    awaitQR = page.waitForSelector('img[alt="Scan me!"]', { timeout: 0 });
+                    awaitChats = page.waitForSelector('#pane-side', { timeout: 0 });
+                    return [4 /*yield*/, Promise.race([awaitQR, awaitChats])];
                 case 8:
                     _b.sent();
+                    return [4 /*yield*/, page.$('img[alt="Scan me!"]')];
+                case 9:
+                    qrCode = _b.sent();
+                    if (!qrCode) return [3 /*break*/, 13];
+                    qrPath = "lastqr.png";
+                    return [4 /*yield*/, page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')];
+                case 10: return [4 /*yield*/, (_b.sent()).screenshot({ path: qrPath })];
+                case 11:
+                    _b.sent();
+                    return [4 /*yield*/, open(qrPath)];
+                case 12:
+                    _b.sent();
+                    print("Please scan the QR code with your phone's WhatsApp scanner.\nYou can close the image once scanned.");
+                    _b.label = 13;
+                case 13:
                     debug('Waiting on #pane-side');
                     return [4 /*yield*/, page.waitForSelector('#pane-side')];
-                case 9:
+                case 14:
                     _b.sent();
                     sent = new Map();
                     startTime = moment.utc();
-                    _b.label = 10;
-                case 10:
-                    if (!true) return [3 /*break*/, 17];
+                    _b.label = 15;
+                case 15:
+                    if (!true) return [3 /*break*/, 22];
                     console.log("Running for " + moment.utc().diff(startTime, 'seconds') + " seconds");
                     return [4 /*yield*/, page.$eval('#pane-side', function (ps) {
                             console.log('IN');
@@ -167,35 +144,35 @@ process.on("unhandledRejection", function (reason, p) {
                             })
                                 .filter(function (c) { return parseInt(c.num) > 0 && c.name.length > 0; });
                         }, sent)];
-                case 11:
+                case 16:
                     unreads = _b.sent();
                     _i = 0, _a = unreads.filter(function (u) { return !sent.has(u.name); });
-                    _b.label = 12;
-                case 12:
-                    if (!(_i < _a.length)) return [3 /*break*/, 15];
+                    _b.label = 17;
+                case 17:
+                    if (!(_i < _a.length)) return [3 /*break*/, 20];
                     unread = _a[_i];
                     if (sent.has(unread.name)) {
                         console.log("Message to " + unread.name + " already sent");
-                        return [3 /*break*/, 14];
+                        return [3 /*break*/, 19];
                     }
                     text = chat_handler_1.default.generateMessage(unread.name);
                     return [4 /*yield*/, chat_handler_1.default.sendMessage(page, unread.name, text)];
-                case 13:
+                case 18:
                     if (_b.sent()) {
                         sent.set(unread.name, moment.utc());
                     }
                     else {
                         console.log("Failed message to " + unread.name);
                     }
-                    _b.label = 14;
-                case 14:
+                    _b.label = 19;
+                case 19:
                     _i++;
-                    return [3 /*break*/, 12];
-                case 15: return [4 /*yield*/, page.waitFor(10000)];
-                case 16:
+                    return [3 /*break*/, 17];
+                case 20: return [4 /*yield*/, page.waitFor(10000)];
+                case 21:
                     _b.sent();
-                    return [3 /*break*/, 10];
-                case 17: return [2 /*return*/];
+                    return [3 /*break*/, 15];
+                case 22: return [2 /*return*/];
             }
         });
     });

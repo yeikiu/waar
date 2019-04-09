@@ -32,20 +32,20 @@ process.on("unhandledRejection", (reason, p) => {
         args: [
             '--log-level=3', // fatal only
             //'--start-maximized',
-            '--no-default-browser-check',
-            '--disable-infobars',
-            '--disable-web-security',
-            '--disable-site-isolation-trials',
-            '--no-experiments',
-            '--ignore-gpu-blacklist',
-            '--ignore-certificate-errors',
-            '--ignore-certificate-errors-spki-list',
-            '--disable-gpu',
-            '--disable-extensions',
-            '--disable-default-apps',
-            '--enable-features=NetworkService',
-            '--disable-setuid-sandbox',
-            '--no-sandbox',
+            // '--no-default-browser-check',
+            // '--disable-infobars',
+            // '--disable-web-security',
+            // '--disable-site-isolation-trials',
+            // '--no-experiments',
+            // '--ignore-gpu-blacklist',
+            // '--ignore-certificate-errors',
+            // '--ignore-certificate-errors-spki-list',
+            // '--disable-gpu',
+            // '--disable-extensions',
+            // '--disable-default-apps',
+            // '--enable-features=NetworkService',
+            // '--disable-setuid-sandbox',
+            // '--no-sandbox',
             //'--incognito'
         ]
     });
@@ -63,28 +63,27 @@ process.on("unhandledRejection", (reason, p) => {
             if (!t) return null;
             return t.textContent;
         });
-    
-    } catch (e) {};
+
+    } catch (e) { };
     debug('title', title);
     // this means browser upgrade warning came up for some reasons
     if (title && title.includes('Google Chrome 36+')) {
         logError(`Can't open whatsapp web, most likely got browser upgrade message....`);
         process.exit();
     }
-    
-    // Check if we need to log-in
-    const awaitQR = page.waitForSelector('img[alt="Scan me!"]');
-    const awaitChats = page.waitForSelector('#pane-side');
 
-    await Promise.race([awaitQR, awaitChats]).then(async function(value) {
-        const qrCode = await page.$('img[alt="Scan me!"]');
-        if (qrCode) {
-            const qrPath = `lastqr.png`;
-            await (await page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')).screenshot({path: qrPath});
-            await open(qrPath);
-            print(`Please scan the QR code with your phone's WhatsApp scanner.\nYou can close the image once scanned.`);
-        }
-    });
+    // Check if we need to log-in
+    const awaitQR = page.waitForSelector('img[alt="Scan me!"]', {timeout: 0});
+    const awaitChats = page.waitForSelector('#pane-side', {timeout: 0});
+
+    await Promise.race([awaitQR, awaitChats]);
+    const qrCode = await page.$('img[alt="Scan me!"]');
+    if (qrCode) {
+        const qrPath = `lastqr.png`;
+        await (await page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')).screenshot({ path: qrPath });
+        await open(qrPath);
+        print(`Please scan the QR code with your phone's WhatsApp scanner.\nYou can close the image once scanned.`);
+    }
 
     debug('Waiting on #pane-side');
     await page.waitForSelector('#pane-side');
