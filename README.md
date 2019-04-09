@@ -1,5 +1,5 @@
 # WaAr - WhatsApp AutoReply
-Auto-Reply on WhatsApp for those moments you want to be online but let everyone know you're busy.
+Auto-Reply for WhatsApp running on NodeJS
 
 Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer) under the hood :smile:
 
