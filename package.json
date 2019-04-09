@@ -20,7 +20,8 @@
     "minimist": "^1.2.0",
     "moment": "^2.24.0",
     "open": "^6.1.0",
-    "puppeteer": "^1.13.0"
+    "puppeteer": "^1.13.0",
+    "rimraf": "^2.6.3"
   },
   "scripts": {
     "start": "tsc && DEBUG=wa-ar:* node dist/index.js"

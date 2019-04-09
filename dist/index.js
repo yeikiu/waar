@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -38,11 +49,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var debug = require('debug')("wa-ar:" + require('path').parse(__filename).name);
 var logError = require('debug')("wa-ar:" + require('path').parse(__filename).name + ":error*");
 var print = require('debug')("wa-ar:" + require('path').parse(__filename).name + "*");
+var minimist = require('minimist');
 var puppeteer = require('puppeteer');
 var open = require("open");
 var path = require('path');
+var rimraf = require('rimraf');
 var findChrome = require('./../lib/find_chrome.js');
 var config = require('./../config.js');
+var args = minimist(process.argv.slice(2), {
+    boolean: ['window', 'w'],
+    number: ['min_minutes_between_messages', 'check_interval_seconds'],
+    alias: {
+        w: 'window',
+        nrf: 'min_minutes_between_messages',
+        ci: 'check_interval_seconds'
+    }
+});
+config = __assign({}, config, args);
+var qrPath = null;
 var chat_handler_1 = require("./handlers/chat_handler");
 var moment = require("moment");
 // catch un-handled promise errors
@@ -51,7 +75,7 @@ process.on("unhandledRejection", function (reason, p) {
 });
 (function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var executablePath, headless, browser, page, title, e_1, awaitQR, awaitChats, qrCode, qrPath, sent, startTime, unreads, _i, _a, unread, text;
+        var executablePath, headless, browser, page, title, e_1, err_1, qrCode, sent, startTime, unreads, _i, _a, unread, text;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -59,11 +83,26 @@ process.on("unhandledRejection", function (reason, p) {
                     headless = !config.window;
                     return [4 /*yield*/, puppeteer.launch({
                             headless: headless,
-                            executablePath: executablePath,
+                            //executablePath: executablePath,
                             userDataDir: path.resolve(__dirname, config.data_dir),
                             ignoreHTTPSErrors: true,
                             args: [
                                 '--log-level=3',
+                                //'--start-maximized',
+                                '--no-default-browser-check',
+                                '--disable-infobars',
+                                '--disable-web-security',
+                                '--disable-site-isolation-trials',
+                                '--no-experiments',
+                                '--ignore-gpu-blacklist',
+                                '--ignore-certificate-errors',
+                                '--ignore-certificate-errors-spki-list',
+                                '--disable-gpu',
+                                '--disable-extensions',
+                                '--disable-default-apps',
+                                '--enable-features=NetworkService',
+                                '--disable-setuid-sandbox',
+                                '--no-sandbox',
                             ]
                         })];
                 case 1:
@@ -71,6 +110,7 @@ process.on("unhandledRejection", function (reason, p) {
                     return [4 /*yield*/, browser.pages()];
                 case 2:
                     page = (_b.sent())[0];
+                    page.setViewport({ width: 1280, height: 800 });
                     //await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
                     return [4 /*yield*/, page.goto('https://web.whatsapp.com/', {
                             waitUntil: 'networkidle2',
@@ -80,57 +120,85 @@ process.on("unhandledRejection", function (reason, p) {
                     //await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
                     _b.sent();
                     title = null;
-                    _b.label = 4;
+                    return [4 /*yield*/, page.waitForSelector('.landing-title', { timeout: 8000 })];
                 case 4:
-                    _b.trys.push([4, 6, , 7]);
-                    return [4 /*yield*/, page.$eval('.window-title', function (t) {
+                    _b.sent();
+                    _b.label = 5;
+                case 5:
+                    _b.trys.push([5, 7, , 8]);
+                    return [4 /*yield*/, page.$eval('.landing-title', function (t) {
                             if (!t)
                                 return null;
                             return t.textContent;
                         })];
-                case 5:
-                    title = _b.sent();
-                    return [3 /*break*/, 7];
                 case 6:
-                    e_1 = _b.sent();
-                    return [3 /*break*/, 7];
+                    title = _b.sent();
+                    return [3 /*break*/, 8];
                 case 7:
-                    ;
-                    debug('title', title);
-                    // this means browser upgrade warning came up for some reasons
-                    if (title && title.includes('Google Chrome 36+')) {
-                        logError("Can't open whatsapp web, most likely got browser upgrade message....");
-                        process.exit();
-                    }
-                    awaitQR = page.waitForSelector('img[alt="Scan me!"]', { timeout: 0 });
-                    awaitChats = page.waitForSelector('#pane-side', { timeout: 0 });
-                    return [4 /*yield*/, Promise.race([awaitQR, awaitChats])];
+                    e_1 = _b.sent();
+                    return [3 /*break*/, 8];
                 case 8:
-                    _b.sent();
-                    return [4 /*yield*/, page.$('img[alt="Scan me!"]')];
+                    ;
+                    if (!(title && title.includes('Google Chrome 36+'))) return [3 /*break*/, 14];
+                    logError("Can't open whatsapp web, most likely got browser upgrade message....");
+                    _b.label = 9;
                 case 9:
-                    qrCode = _b.sent();
-                    if (!qrCode) return [3 /*break*/, 13];
-                    qrPath = "lastqr.png";
-                    return [4 /*yield*/, page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')];
-                case 10: return [4 /*yield*/, (_b.sent()).screenshot({ path: qrPath })];
+                    _b.trys.push([9, 12, , 13]);
+                    rimraf.sync(path.resolve(__dirname, config.data_dir));
+                    return [4 /*yield*/, page.reload()];
+                case 10:
+                    _b.sent();
+                    return [4 /*yield*/, browser.close()];
                 case 11:
                     _b.sent();
-                    return [4 /*yield*/, open(qrPath)];
+                    config.window = true; // Fallback displaying window
+                    return [2 /*return*/, main()];
                 case 12:
+                    err_1 = _b.sent();
+                    logError(err_1.message);
+                    return [3 /*break*/, 13];
+                case 13: return [3 /*break*/, 20];
+                case 14:
+                    if (!(title && title.includes('To use WhatsApp on your computer'))) return [3 /*break*/, 20];
+                    print("Waiting on QR code...");
+                    return [4 /*yield*/, page.waitForSelector('img[alt="Scan me!"]', { timeout: 0 })];
+                case 15:
+                    _b.sent();
+                    return [4 /*yield*/, page.$('img[alt="Scan me!"]')];
+                case 16:
+                    qrCode = _b.sent();
+                    if (!(qrCode && !config.window)) return [3 /*break*/, 20];
+                    //debug('qrCode', qrCode);
+                    qrPath = "_tmp/lastqr.png";
+                    return [4 /*yield*/, page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')];
+                case 17: return [4 /*yield*/, (_b.sent()).screenshot({ path: qrPath })];
+                case 18:
+                    _b.sent();
+                    return [4 /*yield*/, open(qrPath)];
+                case 19:
                     _b.sent();
                     print("Please scan the QR code with your phone's WhatsApp scanner.\nYou can close the image once scanned.");
-                    _b.label = 13;
-                case 13:
-                    debug('Waiting on #pane-side');
+                    _b.label = 20;
+                case 20: return [4 /*yield*/, page.waitForSelector('#pane-side', { timeout: 0 })];
+                case 21:
+                    _b.sent();
+                    debug("\uD83D\uDE4C  Logged IN! \uD83D\uDE4C");
+                    if (qrPath) {
+                        try {
+                            require('fs').unlinkSync(qrPath);
+                        }
+                        catch (err) {
+                            logError(err);
+                        }
+                    }
                     return [4 /*yield*/, page.waitForSelector('#pane-side')];
-                case 14:
+                case 22:
                     _b.sent();
                     sent = new Map();
                     startTime = moment.utc();
-                    _b.label = 15;
-                case 15:
-                    if (!true) return [3 /*break*/, 22];
+                    _b.label = 23;
+                case 23:
+                    if (!true) return [3 /*break*/, 30];
                     console.log("Running for " + moment.utc().diff(startTime, 'seconds') + " seconds");
                     return [4 /*yield*/, page.$eval('#pane-side', function (ps) {
                             console.log('IN');
@@ -144,12 +212,12 @@ process.on("unhandledRejection", function (reason, p) {
                             })
                                 .filter(function (c) { return parseInt(c.num) > 0 && c.name.length > 0; });
                         })];
-                case 16:
+                case 24:
                     unreads = _b.sent();
                     _i = 0, _a = unreads.filter(function (u) { return !sent.has(u.name) || moment.utc().diff(sent.get(u.name), 'minutes') >= config.min_minutes_between_messages; });
-                    _b.label = 17;
-                case 17:
-                    if (!(_i < _a.length)) return [3 /*break*/, 20];
+                    _b.label = 25;
+                case 25:
+                    if (!(_i < _a.length)) return [3 /*break*/, 28];
                     unread = _a[_i];
                     if (sent.has(unread.name)) {
                         console.log("Message to " + unread.name + " already sent");
@@ -157,22 +225,22 @@ process.on("unhandledRejection", function (reason, p) {
                     }
                     text = chat_handler_1.default.generateMessage(unread.name);
                     return [4 /*yield*/, chat_handler_1.default.sendMessage(page, unread.name, text)];
-                case 18:
+                case 26:
                     if (_b.sent()) {
                         sent.set(unread.name, moment.utc());
                     }
                     else {
                         console.log("Failed message to " + unread.name);
                     }
-                    _b.label = 19;
-                case 19:
+                    _b.label = 27;
+                case 27:
                     _i++;
-                    return [3 /*break*/, 17];
-                case 20: return [4 /*yield*/, page.waitFor(config.check_interval_seconds * 1000)];
-                case 21:
+                    return [3 /*break*/, 25];
+                case 28: return [4 /*yield*/, page.waitFor(config.check_interval_seconds * 1000)];
+                case 29:
                     _b.sent();
-                    return [3 /*break*/, 15];
-                case 22: return [2 /*return*/];
+                    return [3 /*break*/, 23];
+                case 30: return [2 /*return*/];
             }
         });
     });
