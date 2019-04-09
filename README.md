@@ -1,29 +1,20 @@
-# Whatspup
-Use Whatsapp from commandline/console/cli using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer) :smile:
+# WaAr - WhatsApp AutoReply
+Use WhatsApp web to let everyone know you're busy.
+
+Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer) under the hood :smile:
 
 ## Features ##
 
-- :white_check_mark: Send and receive messages
-- :white_check_mark: Read Receipts
-- :white_check_mark: Switch between users to chat with
-- :white_check_mark: Popup notifications for new chat messages
-- :white_check_mark: Privacy settings for popup notifications
-- :white_check_mark: One-time authentication, no need to scan QR code again and again
-- :white_check_mark: Windowless/headless (hidden) mode
-- :white_check_mark: Colorful chat messages
-
-Of course, it is not possible to send/receive picture messages from command line.
-
-## Screenshot ##
-
-![Main Window](https://raw.githubusercontent.com/sarfraznawaz2005/whatspup/master/screenshot.jpg)
+- :white_check_mark: Login once and remember session
+- :white_check_mark: Set message-checking interval
+- :white_check_mark: Set minimun time-frame between consecutive auto-replies
 
 ## Requirements ##
 
 - Node v8+
 - puppeteer v0.13.0+
 
-Tested on Windows with Node v8.9.1 and puppeteer v0.13.0
+Tested on MacOS X with Node v8.9.1 and puppeteer v0.13.0
 
 ## Installation ##
 
