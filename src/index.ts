@@ -19,7 +19,7 @@ const args = minimist(process.argv.slice(2), {
         ci: 'check_interval_seconds'
     }
 });
-config = { ...config, ...args };
+config = { ...config, ...args, DEBUG:'wa-ar:*' };
 const _tmpPath = path.resolve(__dirname, config.data_dir);
 let qrPath = null;
 
@@ -75,7 +75,7 @@ if (!fs.existsSync(_tmpPath)) {
     });
 
     const page = (await browser.pages())[0];
-    page.setViewport({ width: 1400, height: 900 });
+    page.setViewport({ width: 1024, height: 768 });
     // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
     await page.goto('https://web.whatsapp.com/', {
         waitUntil: 'networkidle2',
@@ -96,7 +96,6 @@ if (!fs.existsSync(_tmpPath)) {
     if (title && title.includes('Google Chrome 36+')) {
         logError(`Can't open whatsapp web in headless mode, falling back to window mode....`);
         try {
-
             //await page.reload();
             await browser.close();
             rimraf.sync(_tmpPath);
