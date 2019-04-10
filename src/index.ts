@@ -153,8 +153,7 @@ if (!fs.existsSync(_tmpPath)) {
 
         for (const unread of unreads.filter(u => !sent.has(u.name) || moment.utc().diff(sent.get(u.name), 'minutes') >= config.min_minutes_between_messages)) {
             if (sent.has(unread.name)) {
-                console.log(`Message to ${unread.name} already sent`);
-                debug(moment.utc().diff(sent.get(unread.name), 'minutes'));
+                print(`Message to ${unread.name} already sent ${sent.get(unread.name).fromNow()}`);
             }
             const text = chatHandler.generateMessage(unread.name);
             if (await chatHandler.sendMessage(page, unread.name, text)) {
