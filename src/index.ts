@@ -19,7 +19,7 @@ const args = minimist(process.argv.slice(2), {
         ci: 'check_interval_seconds'
     }
 });
-config = { ...config, ...args, DEBUG:'wa-ar:*' };
+config = { ...config, ...args };
 const _tmpPath = path.resolve(__dirname, config.data_dir);
 let qrPath = null;
 
@@ -77,21 +77,24 @@ if (!fs.existsSync(_tmpPath)) {
     const page = (await browser.pages())[0];
     page.setViewport({ width: 1024, height: 768 });
     // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
+    debug(`loading`);
     await page.goto('https://web.whatsapp.com/', {
         waitUntil: 'networkidle2',
         timeout: 0
     });
 
     let title = null;
-    await page.waitForSelector('.landing-title', { timeout: 8000 });
+    await Promise.race([page.waitForSelector('#pane-side', { timeout: 0 }), page.waitForSelector('.landing-title', { timeout: 0 })]);
+    debug(`loaded`);
+
     try {
         title = await page.$eval('.landing-title', (t) => {
             if (!t) return null;
             return t.textContent;
         });
 
-    } catch (e) { };
-    //debug(`title`, title);
+    } catch (e) { logError(`titleError`, e.message); };
+    debug(`title`, title);
     // this means browser upgrade warning came up for some reasons
     if (title && title.includes('Google Chrome 36+')) {
         logError(`Can't open whatsapp web in headless mode, falling back to window mode....`);
@@ -121,8 +124,8 @@ if (!fs.existsSync(_tmpPath)) {
     }
 
     await page.waitForSelector('#pane-side', { timeout: 0 });
-
     debug(`🙌  Logged IN! 🙌`);
+
     if (qrPath) {
         try {
             require('fs').unlinkSync(qrPath)
@@ -131,15 +134,13 @@ if (!fs.existsSync(_tmpPath)) {
         }
     }
 
-    await page.waitForSelector('#pane-side');
     const sent = new Map();
     const startTime = moment.utc();
 
     //check cell updates and reply
     while (true) {
-        console.log(`Running for ${moment.utc().diff(startTime, 'seconds')} seconds`);
+        debug(`Running for ${moment.utc().diff(startTime, 'seconds')} seconds`);
         const unreads = await page.$eval('#pane-side', (ps) => {
-            console.log('IN');
             return Array.from(ps.firstChild.firstChild.firstChild.childNodes || {})
                 .map((c: any) => {
                     return {
@@ -159,7 +160,7 @@ if (!fs.existsSync(_tmpPath)) {
             if (await chatHandler.sendMessage(page, unread.name, text)) {
                 sent.set(unread.name, moment.utc());
             } else {
-                console.log(`Failed message to ${unread.name}`);
+                debug(`Failed message to ${unread.name}`);
             }
         }
         await page.waitFor(config.check_interval_seconds * 1000);

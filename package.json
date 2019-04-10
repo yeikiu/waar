@@ -24,6 +24,7 @@
     "rimraf": "^2.6.3"
   },
   "scripts": {
-    "start": "tsc && node dist/index.js"
+    "start": "tsc && node dist/index.js",
+    "debug": "tsc && DEBUG=wa-ar:* node dist/index.js"
   }
 }
