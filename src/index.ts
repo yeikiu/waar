@@ -20,6 +20,7 @@ const args = minimist(process.argv.slice(2), {
     }
 });
 config = { ...config, ...args };
+const _tmpPath = path.resolve(__dirname, config.data_dir);
 let qrPath = null;
 
 import chatHandler from "./handlers/chat_handler";
@@ -30,26 +31,51 @@ process.on("unhandledRejection", (reason, p) => {
     //logError("Unhandled Rejection at: Promise", p, "reason:", reason);
 });
 
+//Setup writeable dir
+const fs = require('fs');
+if (!fs.existsSync(_tmpPath)) {
+    try {
+        fs.mkdirSync(_tmpPath, { recursive: true });
+        fs.chmodSync(_tmpPath, '755');
+      } catch (err) {
+        if (err.code !== 'EEXIST') throw err
+      }
+}
+
 (async function main() {
     //
     // Login and wait to load
     //
-    const executablePath = findChrome().pop() || null;
+    // const executablePath = findChrome().pop() || null;
     const headless = !config.window;
 
     const browser = await puppeteer.launch({
         headless: headless,
-        executablePath: executablePath,
-        userDataDir: path.resolve(__dirname, config.data_dir),
+        //executablePath: executablePath,
+        userDataDir: _tmpPath,
         ignoreHTTPSErrors: true,
         args: [
-            '--window-size=1920x800',
-            //'--incognito'
+            '--log-level=3', // fatal only
+            //'--start-maximized',
+            '--no-default-browser-check',
+            '--disable-infobars',
+            '--disable-web-security',
+            '--disable-site-isolation-trials',
+            '--no-experiments',
+            '--ignore-gpu-blacklist',
+            '--ignore-certificate-errors',
+            '--ignore-certificate-errors-spki-list',
+            '--disable-gpu',
+            '--disable-extensions',
+            '--disable-default-apps',
+            '--enable-features=NetworkService',
+            '--disable-setuid-sandbox',
+            '--no-sandbox'
         ]
     });
 
     const page = (await browser.pages())[0];
-    page.setViewport({width: 1280, height: 800});
+    page.setViewport({ width: 1400, height: 900 });
     // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
     await page.goto('https://web.whatsapp.com/', {
         waitUntil: 'networkidle2',
@@ -70,31 +96,33 @@ process.on("unhandledRejection", (reason, p) => {
     if (title && title.includes('Google Chrome 36+')) {
         logError(`Can't open whatsapp web in headless mode, falling back to window mode....`);
         try {
-            rimraf.sync(path.resolve(__dirname, config.data_dir));
-            await page.reload();
+
+            //await page.reload();
             await browser.close();
+            rimraf.sync(_tmpPath);
+            await page.waitFor(3000);
             config.window = true; // Fallback displaying window
             return main();
         } catch (err) {
             logError(err.message);
         }
-    
+
     } else if (title && title.includes('To use WhatsApp on your computer')) {
         print(`Waiting on QR code...`);
         await page.waitForSelector('img[alt="Scan me!"]', { timeout: 0 });
         const qrCode = await page.$('img[alt="Scan me!"]');
-        
+
         if (qrCode && !config.window) {
             //debug('qrCode', qrCode);
             qrPath = `lastqr.png`;
             await (await page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')).screenshot({ path: qrPath });
             await open(qrPath);
             print(`Please scan the QR code with your phone's WhatsApp scanner.\nYou can close the image once scanned.`);
-        } 
+        }
     }
 
     await page.waitForSelector('#pane-side', { timeout: 0 });
- 
+
     debug(`🙌  Logged IN! 🙌`);
     if (qrPath) {
         try {
