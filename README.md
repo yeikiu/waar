@@ -17,17 +17,18 @@ Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer
 Tested on MacOS X with Node v8.9.1 and puppeteer v0.13.0
 
 ## Installation ##
-
+- Install [yarn](https://yarnpkg.com/lang/en/docs/install)
 - Clone this repository. `git clone https://github.com/yeikiu/waar.git`
-- Type `yarn install`
+- CD into dir: `cd waar`
+- Get dependencies: `yarn install`
 
 ## Running the bot ##
 
-- Type `yarn start` for deafult values
+- Finally run `yarn start` for deafult values
 
 OR
 
-- Type `yarn start --nrf=6 --ci=30 --w=false` where:
+- `yarn start --nrf=6 --ci=30 --w=false` where:
     - nrf = No Reply Frame = Time in minutes to wait before auto-replying the same conversation
     - ci = Check Interval = Time in seconds to wait before checking for new messages through your conversations
     - w = Window = Hide/Show the browser window
