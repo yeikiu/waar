@@ -44,3 +44,4 @@ You are welcome to contribute to this project.
 ## Disclaimer ##
 
 This project is not affiliated with official WhatsApp in any sense.
+All credits for the base code should be for [sarfraznawaz2005](https://github.com/sarfraznawaz2005/whatspup), this repo wouldn't exist without his fork.
