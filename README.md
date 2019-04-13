@@ -12,15 +12,14 @@ Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer
 - :white_check_mark: Set minimun time-frame between consecutive auto-replies
 
 ## Requirements ##
-- Yarn/npm
-- Node v8+
-- puppeteer v0.13.0+
+- yarn OR npm
+- NodeJS v8+
 
 Tested on Windows & MacOS X + Node v8.9.1 and puppeteer v0.13.0
 
 ## Installation ##
 - Install [yarn](https://yarnpkg.com/lang/en/docs/install)
-- Clone this repository. `git clone https://github.com/yeikiu/waar.git`
+- Clone this repository. `git clone https://github.com/yeikiu/waar.git` or [download the latest .zip](https://github.com/yeikiu/waar/archive/master.zip)
 - CD into dir: `cd waar`
 - Get dependencies: `yarn install`
 
