@@ -19,7 +19,7 @@ Tested on Windows & MacOS X + Node v8.9.1 and puppeteer v0.13.0
 
 ## Installation ##
 - Install [yarn](https://yarnpkg.com/lang/en/docs/install)
-- Clone this repository. `git clone https://github.com/yeikiu/waar.git` or [download the latest .zip](https://github.com/yeikiu/waar/archive/master.zip)
+- `git clone https://github.com/yeikiu/waar.git` or [download the latest .zip](https://github.com/yeikiu/waar/archive/master.zip)
 - CD into dir: `cd waar`
 - Get dependencies: `yarn install`
 
