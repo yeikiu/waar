@@ -84,7 +84,7 @@ if (!fs.existsSync(_tmpPath)) {
     });
 
     let title = null;
-    await ( page.waitForSelector('#pane-side', { timeout: 0 }) || page.waitForSelector('.landing-title', { timeout: 0 }) );
+    await Promise.race([page.waitForSelector('#pane-side', { timeout: 0 }), page.waitForSelector('.landing-title', { timeout: 0 })] );
     debug(`Loaded!`);
 
     try {
