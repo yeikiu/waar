@@ -158,7 +158,7 @@ if (!fs.existsSync(_tmpPath)) {
                 return true;
 
             } else {
-                print(`Skipped ${u.name}, only ${moment.utc().diff(sent.get(u.name), 'minutes')} minutes since last auto-reply`);
+                print(`Skipped ${u.name}'s chat, only ${moment.utc().diff(sent.get(u.name), 'minutes')} minute(s) since last auto-reply`);
                 return false;
             }
         });
@@ -168,7 +168,7 @@ if (!fs.existsSync(_tmpPath)) {
             if (await chatHandler.sendMessage(page, unread.name, text)) {
                 sent.set(unread.name, moment.utc());
             } else {
-                logError(`Failed message to ${unread.name}`);
+                logError(`Failed messaging ${unread.name}`);
             }
         }
         await page.waitFor(config.check_interval_seconds * 1000);
