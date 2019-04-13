@@ -31,7 +31,7 @@ process.on("unhandledRejection", (reason, p) => {
     //logError("Unhandled Rejection at: Promise", p, "reason:", reason);
 });
 
-//Setup writeable dir
+//Setup writeable dir if it doesn't exist
 const fs = require('fs');
 if (!fs.existsSync(_tmpPath)) {
     try {
@@ -77,7 +77,7 @@ if (!fs.existsSync(_tmpPath)) {
     const page = (await browser.pages())[0];
     page.setViewport({ width: 1024, height: 768 });
     // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36');
-    debug(`loading`);
+    print(`Loading https://web.whatsapp.com`);
     await page.goto('https://web.whatsapp.com/', {
         waitUntil: 'networkidle2',
         timeout: 0
@@ -85,7 +85,7 @@ if (!fs.existsSync(_tmpPath)) {
 
     let title = null;
     await Promise.race([page.waitForSelector('#pane-side', { timeout: 0 }), page.waitForSelector('.landing-title', { timeout: 0 })]);
-    debug(`loaded`);
+    debug(`Loaded!`);
 
     try {
         title = await page.$eval('.landing-title', (t) => {
@@ -93,11 +93,11 @@ if (!fs.existsSync(_tmpPath)) {
             return t.textContent;
         });
 
-    } catch (e) { logError(`titleError`, e.message); };
+    } catch (e) { print(`Already logged in, loading chats`); };
     debug(`title`, title);
     // this means browser upgrade warning came up for some reasons
     if (title && title.includes('Google Chrome 36+')) {
-        logError(`Can't open whatsapp web in headless mode, falling back to window mode....`);
+        logError(`Can't open whatsapp web in headless mode, falling back to window mode`);
         try {
             //await page.reload();
             await browser.close();
@@ -110,7 +110,7 @@ if (!fs.existsSync(_tmpPath)) {
         }
 
     } else if (title && title.includes('To use WhatsApp on your computer')) {
-        print(`Waiting on QR code...`);
+        print(`Login required, please wait while QR code is generated`);
         await page.waitForSelector('img[alt="Scan me!"]', { timeout: 0 });
         const qrCode = await page.$('img[alt="Scan me!"]');
 
@@ -124,7 +124,6 @@ if (!fs.existsSync(_tmpPath)) {
     }
 
     await page.waitForSelector('#pane-side', { timeout: 0 });
-    debug(`🙌  Logged IN! 🙌`);
 
     if (qrPath) {
         try {
@@ -137,10 +136,11 @@ if (!fs.existsSync(_tmpPath)) {
     const sent = new Map();
     const startTime = moment.utc();
 
+    print(`🙌  Logged IN! 🙌 | Auto-Reply started at ${moment().format('HH:mm DD/MM/YYYY')}`);
     //check cell updates and reply
     while (true) {
         debug(`Running for ${moment.utc().diff(startTime, 'seconds')} seconds`);
-        const unreads = await page.$eval('#pane-side', (ps) => {
+        const allUnreads = await page.$eval('#pane-side', (ps) => {
             return Array.from(ps.firstChild.firstChild.firstChild.childNodes || {})
                 .map((c: any) => {
                     return {
@@ -152,15 +152,26 @@ if (!fs.existsSync(_tmpPath)) {
                 .filter((c: any) => parseInt(c.num) > 0 && c.name.length > 0)
         });
 
-        for (const unread of unreads.filter(u => !sent.has(u.name) || moment.utc().diff(sent.get(u.name), 'minutes') >= config.min_minutes_between_messages)) {
+        const unreads = allUnreads.filter(u => {
+            
+            if( !sent.has(u.name) || moment.utc().diff(sent.get(u.name), 'minutes') >= config.min_minutes_between_messages ) {
+
+                return true;
+            } else {
+                print(`Skipped ${u.name}, only ${moment.utc().diff(sent.get(u.name), 'minutes')} minutes since last auto-reply`);
+                return false;
+            }
+        });
+
+        for (const unread of unreads) {
             if (sent.has(unread.name)) {
-                print(`Message to ${unread.name} already sent ${sent.get(unread.name).fromNow()}`);
+                debug(`Message to ${unread.name} already sent ${sent.get(unread.name).fromNow()}`);
             }
             const text = chatHandler.generateMessage(unread.name);
             if (await chatHandler.sendMessage(page, unread.name, text)) {
                 sent.set(unread.name, moment.utc());
             } else {
-                debug(`Failed message to ${unread.name}`);
+                logError(`Failed message to ${unread.name}`);
             }
         }
         await page.waitFor(config.check_interval_seconds * 1000);
