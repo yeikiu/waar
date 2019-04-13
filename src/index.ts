@@ -152,21 +152,18 @@ if (!fs.existsSync(_tmpPath)) {
                 .filter((c: any) => parseInt(c.num) > 0 && c.name.length > 0)
         });
 
-        const unreads = allUnreads.filter(u => {
+        const toReply = allUnreads.filter(u => {
             
             if( !sent.has(u.name) || moment.utc().diff(sent.get(u.name), 'minutes') >= config.min_minutes_between_messages ) {
-
                 return true;
+
             } else {
                 print(`Skipped ${u.name}, only ${moment.utc().diff(sent.get(u.name), 'minutes')} minutes since last auto-reply`);
                 return false;
             }
         });
 
-        for (const unread of unreads) {
-            if (sent.has(unread.name)) {
-                debug(`Message to ${unread.name} already sent ${sent.get(unread.name).fromNow()}`);
-            }
+        for (const unread of toReply) {
             const text = chatHandler.generateMessage(unread.name);
             if (await chatHandler.sendMessage(page, unread.name, text)) {
                 sent.set(unread.name, moment.utc());
