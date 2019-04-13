@@ -37,6 +37,11 @@ OR
 
 **NOTE:** Once you have connected by scanning QR code, your session will be saved so you won't have to scan it again and again unless you revoke from whatsapp app or by deleting **_tmp** folder. 
 
+## TODO ##
+- Mark each replied chat as unread
+- Detect/handle group chat cells
+- Detect/handle log out
+
 ## Contribute ##
 
 You are welcome to contribute to this project.
