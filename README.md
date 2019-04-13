@@ -29,10 +29,11 @@ Tested on Windows & MacOS X + Node v8.9.1 and puppeteer v0.13.0
 
 OR
 
-- `yarn start --nrf=6 --ci=30 --w=false` where:
+- `yarn start --nrf=45 --ci=20 --w=true` where:
     - nrf = No Reply Frame = Time in minutes to wait before auto-replying the same conversation
     - ci = Check Interval = Time in seconds to wait before checking for new messages through your conversations
     - w = Window = Hide/Show the browser window
+    - Default values: `--nrf=30 --ci=25 --w=false`
 
 - The first time you run the bot, waWeb's QR code will appear so you can scan it and close the image once logged in. You can play with the config file to make Chrome window open up, change time intervals.
 
