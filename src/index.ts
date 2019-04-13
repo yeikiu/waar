@@ -84,7 +84,7 @@ if (!fs.existsSync(_tmpPath)) {
     });
 
     let title = null;
-    await Promise.race([page.waitForSelector('#pane-side', { timeout: 0 }), page.waitForSelector('.landing-title', { timeout: 0 })]);
+    await ( page.waitForSelector('#pane-side', { timeout: 0 }) || page.waitForSelector('.landing-title', { timeout: 0 }) );
     debug(`Loaded!`);
 
     try {
@@ -123,6 +123,8 @@ if (!fs.existsSync(_tmpPath)) {
         }
     }
 
+    print('🙌  Logged IN! 🙌');
+
     await page.waitForSelector('#pane-side', { timeout: 0 });
 
     if (qrPath) {
@@ -136,7 +138,7 @@ if (!fs.existsSync(_tmpPath)) {
     const sent = new Map();
     const startTime = moment.utc();
 
-    print(`🙌  Logged IN! 🙌 | Auto-Reply started at ${moment().format('HH:mm DD/MM/YYYY')}`);
+    print(`Auto-Reply started at ${moment().format('HH:mm DD/MM/YYYY')}`);
     //check cell updates and reply
     while (true) {
         debug(`Running for ${moment.utc().diff(startTime, 'seconds')} seconds`);
@@ -152,23 +154,29 @@ if (!fs.existsSync(_tmpPath)) {
                 .filter((c: any) => parseInt(c.num) > 0 && c.name.length > 0)
         });
 
-        const toReply = allUnreads.filter(u => {
+        const toReply = [];
+        for (const unread of allUnreads) {
             
-            if( !sent.has(u.name) || moment.utc().diff(sent.get(u.name), 'minutes') >= config.min_minutes_between_messages ) {
-                return true;
+            if( !sent.has(unread.name) || moment.utc().diff(sent.get(unread.name), 'minutes') >= config.min_minutes_between_messages ) {
+                toReply.push(unread)
 
             } else {
-                print(`Skipped ${u.name}'s chat, only ${moment.utc().diff(sent.get(u.name), 'minutes')} minute(s) since last auto-reply`);
-                return false;
-            }
-        });
-
-        for (const unread of toReply) {
-            const text = chatHandler.generateMessage(unread.name);
-            if (await chatHandler.sendMessage(page, unread.name, text)) {
+                //test: check chat
+                const userSelector = `#pane-side span[title="${unread.name}"]`;
+                await page.waitFor(userSelector);
+                await page.click(userSelector);
+                await page.waitFor('#main > footer div.selectable-text[contenteditable]');
                 sent.set(unread.name, moment.utc());
+                print(`Skipped ${unread.name}'s chat: ${config.min_minutes_between_messages} minutes left until auto-reply is re-enabled`);
+            }
+        }
+
+        for (const target of toReply) {
+            const text = chatHandler.generateMessage(target.name);
+            if (await chatHandler.sendMessage(page, target.name, text)) {
+                sent.set(target.name, moment.utc());
             } else {
-                logError(`Failed messaging ${unread.name}`);
+                logError(`Failed messaging ${target.name}`);
             }
         }
         await page.waitFor(config.check_interval_seconds * 1000);
