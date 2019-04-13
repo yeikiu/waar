@@ -1,3 +1,8 @@
+const print = require('debug')(`wa-ar:${require('path').parse(__filename).name}*`);
+const logError = require('debug')(`wa-ar:${require('path').parse(__filename).name}:error*`);
+
+import * as moment from "moment";
+
 export default {
     generateMessage: (name) => `
 >> -- AUTO-REPLY -- <<
@@ -20,7 +25,7 @@ Te escribo pronto! 🤓
             await page.click('#main > footer div.selectable-text[contenteditable]');
             const titleName = await page.$eval('#main > header span[title]', e => e.textContent);
             if (titleName !== name) {
-                console.log(`Can't load chat with ${name}`);
+                logError(`Can't load chat with ${name}`);
                 return false;
             }
 
@@ -35,7 +40,7 @@ Te escribo pronto! 🤓
 
             await page.waitFor(1000);
             await page.keyboard.press('Enter');
-            console.log('Sent to ', name);
+            print(`Sent to ${name} at ${moment().format('HH:mm')}`);
             return true;
         
         } catch(e) {
