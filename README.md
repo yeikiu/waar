@@ -1,6 +1,8 @@
 # WaAr - WhatsApp AutoReply
 Auto-Reply for WhatsApp running on NodeJS
 
+<img width="600" alt="waar preview" src="./waar.png">
+
 Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer) under the hood :smile:
 
 ## Features ##
@@ -14,7 +16,7 @@ Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer
 - Node v8+
 - puppeteer v0.13.0+
 
-Tested on MacOS X with Node v8.9.1 and puppeteer v0.13.0
+Tested on Windows & MacOS X + Node v8.9.1 and puppeteer v0.13.0
 
 ## Installation ##
 - Install [yarn](https://yarnpkg.com/lang/en/docs/install)
