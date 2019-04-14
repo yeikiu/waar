@@ -109,7 +109,7 @@ if (!fs.existsSync(_tmpPath)) {
             logError(err.message);
         }
 
-    } else if (title && title.includes('To use WhatsApp on your computer')) {
+    } else if (title/*  && title.includes('To use WhatsApp on your computer') */) {
         print(`Login required, please wait while QR code is generated`);
         await page.waitForSelector('img[alt="Scan me!"]', { timeout: 0 });
         const qrCode = await page.$('img[alt="Scan me!"]');
