@@ -157,7 +157,7 @@ if (!fs.existsSync(_tmpPath)) {
         const toReply = [];
         for (const unread of allUnreads) {
             
-            if( !sent.has(unread.name) || moment.utc().diff(sent.get(unread.name), 'minutes') >= config.min_minutes_between_messages ) {
+            if( !sent.has(unread.name) || (sent.has(unread.name) && moment.utc().diff(sent.get(unread.name), 'minutes') >= config.min_minutes_between_messages) ) {
                 toReply.push(unread)
 
             } else {
