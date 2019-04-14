@@ -21,7 +21,7 @@ const args = minimist(process.argv.slice(2), {
     }
 });
 config = { ...config, ...args };
-['message', 'm'].forEach(k => { config[k] = config[k].replace(/\\n/g,'\n'); });
+['message', 'm'].forEach(k => { if (config[k]) config[k] = config[k].replace(/\\n/g,'\n'); });
 debug({config});
 const _tmpPath = path.resolve(__dirname, config.data_dir);
 let qrPath = null;
