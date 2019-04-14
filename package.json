@@ -25,7 +25,6 @@
   },
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "debugWin": "tsc && set DEBUG=wa-ar:* && node dist/index.js --w=true",
-    "debugMac": "tsc && DEBUG=wa-ar:* node dist/index.js --w=true"
+    "debug": "tsc && set DEBUG=wa-ar:* && node dist/index.js --w=true"
   }
 }

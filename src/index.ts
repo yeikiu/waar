@@ -138,7 +138,7 @@ if (!fs.existsSync(_tmpPath)) {
         }
     }
 
-    const sent = new Map();
+    const sent = {};
     const startTime = moment.utc();
 
     print(`Auto-Reply started at ${moment().format('HH:mm DD/MM/YYYY')}`);
@@ -160,8 +160,8 @@ if (!fs.existsSync(_tmpPath)) {
         const toReply = [];
         for (const unread of allUnreads) {
             
-            if( !sent.has(unread.name) || (sent.has(unread.name) && moment.utc().diff(sent.get(unread.name), 'minutes') >= config.min_minutes_between_messages) ) {
-                toReply.push(unread)
+            if( !sent[unread.name] || moment.utc().diff(sent[unread.name], 'minutes') >= config.min_minutes_between_messages ) {
+                toReply.push(unread);
 
             } else {
                 //test: check chat
@@ -169,7 +169,7 @@ if (!fs.existsSync(_tmpPath)) {
                 await page.waitFor(userSelector);
                 await page.click(userSelector);
                 await page.waitFor('#main > footer div.selectable-text[contenteditable]');
-                sent.set(unread.name, moment.utc());
+                sent[unread.name] = moment.utc();
                 print(`Skipped ${unread.name}'s chat: ${config.min_minutes_between_messages} minutes left until auto-reply is re-enabled`);
             }
         }
@@ -177,7 +177,7 @@ if (!fs.existsSync(_tmpPath)) {
         for (const target of toReply) {
             const text = chatHandler.generateMessage(target.name, config.message);
             if (await chatHandler.sendMessage(page, target.name, text)) {
-                sent.set(target.name, moment.utc());
+                sent[target.name] = moment.utc();
             } else {
                 logError(`Failed messaging ${target.name}`);
             }
