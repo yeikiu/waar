@@ -29,7 +29,8 @@ Tested on Windows & MacOS X + Node v8.9.1 and puppeteer v0.13.0
 
 OR
 
-- `yarn start --nrf=45 --ci=20 --w=true` where:
+- `yarn start -m="I'm not available at the moment. \n\nPlease try again later." --nrf=45 --ci=20 --w=true` where:
+    - m = Message = Body of the programmed auto-reply. Default message within `config.js` file.
     - nrf = No Reply Frame = Time in minutes to wait before auto-replying the same conversation
     - ci = Check Interval = Time in seconds to wait before checking for new messages through your conversations
     - w = Window = Hide/Show the browser window

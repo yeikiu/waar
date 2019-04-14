@@ -4,6 +4,10 @@ module.exports = {
     // GENERAL SETTINGS
     ////////////////////////////////////////////////////////////////
 
+    message: `En estos momentos no puedo atender al WhatsApp.
+
+    Te escribo pronto! 🤓`,
+
     // Data directory is used so that we can persist cookies per session and not have to
     // authorize this application every time.
     // NOTE: This directory can get quite large overtime, in that case simply delete it

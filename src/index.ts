@@ -15,11 +15,14 @@ const args = minimist(process.argv.slice(2), {
     number: ['min_minutes_between_messages', 'check_interval_seconds'],
     alias: {
         w: 'window',
+        m: 'message',
         nrf: 'min_minutes_between_messages', // No Reply Frame
         ci: 'check_interval_seconds'
     }
 });
 config = { ...config, ...args };
+['message', 'm'].forEach(k => { config[k] = config[k].replace(/\\n/g,'\n'); });
+debug({config});
 const _tmpPath = path.resolve(__dirname, config.data_dir);
 let qrPath = null;
 
@@ -172,7 +175,7 @@ if (!fs.existsSync(_tmpPath)) {
         }
 
         for (const target of toReply) {
-            const text = chatHandler.generateMessage(target.name);
+            const text = chatHandler.generateMessage(target.name, config.message);
             if (await chatHandler.sendMessage(page, target.name, text)) {
                 sent.set(target.name, moment.utc());
             } else {

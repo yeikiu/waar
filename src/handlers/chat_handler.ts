@@ -4,14 +4,12 @@ const logError = require('debug')(`wa-ar:${require('path').parse(__filename).nam
 import * as moment from "moment";
 
 export default {
-    generateMessage: (name) => `
+    generateMessage: (name, text) => `
 >> -- AUTO-REPLY -- <<
 
 Hola ${name}!
                     
-En estos momentos no puedo atender al WhatsApp.
-
-Te escribo pronto! 🤓
+${text}
 
 >> --- v0.0.1 (beta) --- <<
 `,
