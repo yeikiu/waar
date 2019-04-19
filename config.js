@@ -19,5 +19,5 @@ Te escribo pronto! 🤓`,
     
     min_minutes_between_messages: 30, // minutes
 
-    check_interval_seconds: 25 // seconds
+    check_interval_seconds: 10 // seconds
 }
