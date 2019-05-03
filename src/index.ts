@@ -144,7 +144,11 @@ if (!fs.existsSync(_tmpPath)) {
     print(`Auto-Reply started at ${moment().format('HH:mm DD/MM/YYYY')}`);
     //check cell updates and reply
     while (true) {
-        debug(`Running for ${moment.utc().diff(startTime, 'seconds')} seconds`);
+        const minsRunning = moment.utc().diff(startTime, 'minutes');
+        if(minsRunning % 100 === 0) {
+            print(`Running for ${minsRunning} minutes at ${moment().format('HH:mm DD/MM/YYYY')}`);        
+        }
+
         const allUnreads = await page.$eval('#pane-side', (ps) => {
             return Array.from(ps.firstChild.firstChild.firstChild.childNodes || {})
                 .map((c: any) => {
