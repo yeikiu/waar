@@ -9,13 +9,7 @@ import { Browser, Page } from "puppeteer";
 const doQRlogin = async (page: Page): Promise<Page> => {
     print(`Login required, please wait while QR code is generated`);
     await page.waitForSelector('img[alt="Scan me!"]', { timeout: 0 });
-    //const qrCode = await page.$('img[alt="Scan me!"]');
-    //debug('qrCode', qrCode);
-    
-    // const qrPath = `lastqr.png`;
-    // await (await page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')).screenshot({ path: qrPath });
-    // await open(qrPath);
-    print(`Please scan the QR code with your phone's WhatsApp scanner.\nMake sure HEADLESS=false in the .env file.`);
+    print(`Please scan the QR code with your phone's WhatsApp scanner`);
 
     await page.waitForSelector('#pane-side', { timeout: 0 });
     print('🙌  Logged IN! 🙌');
@@ -24,11 +18,10 @@ const doQRlogin = async (page: Page): Promise<Page> => {
 
 export default {
 
-    launchBrowser(dataDirPath: string, HEADLESS: string): Browser {
+    launchBrowser(dataDirPath: string): Browser {
         return puppeteer.launch({
             // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
-            headless: HEADLESS === 'true', // doesn't work well with official Chrome
-            ignoreDefaultArgs: true, // use true for official Chrome
+            headless: false,
             args: [
                 `--user-data-dir=${path.resolve(dataDirPath)}`,
                 "--disable-dev-shm-usage"

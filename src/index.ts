@@ -11,7 +11,6 @@ import * as moment from "moment";
 const {
     NODE_ENV = 'development',
     DATA_DIR_PATH = '_data',
-    HEADLESS = 'false',
     MESSAGE = `En estos momentos no puedo responder al WhatsApp.\n\nTe escribo pronto! 🤓`,
     CHAT_REPLY_INTERVAL_MINUTES = 90,
     CHECK_UNREAD_INTERVAL_SECONDS = 10,
@@ -19,7 +18,6 @@ const {
 debug({
     NODE_ENV,
     DATA_DIR_PATH,
-    HEADLESS,
     MESSAGE,
     CHAT_REPLY_INTERVAL_MINUTES,
     CHECK_UNREAD_INTERVAL_SECONDS,
@@ -27,7 +25,7 @@ debug({
 
 (async () => {
     // Launch Chrome
-    const browser: Browser = await BrowserHandler.launchBrowser(DATA_DIR_PATH, HEADLESS);
+    const browser: Browser = await BrowserHandler.launchBrowser(DATA_DIR_PATH);
     const page: Page = await BrowserHandler.loadWhatsappWeb(browser);
 
     // Launch Chat Monitor
