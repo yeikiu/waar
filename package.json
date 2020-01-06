@@ -1,6 +1,6 @@
 {
-  "name": "wa-reply",
-  "version": "1.0.0",
+  "name": "wa-ar",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "keywords": [
@@ -12,20 +12,24 @@
   "devDependencies": {
     "@types/node": "^11.11.0",
     "@types/puppeteer": "^1.12.2",
+    "@typescript-eslint/parser": "^2.14.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.19.1",
     "typescript": "^3.3.3333"
   },
   "dependencies": {
     "debug": "^4.1.1",
     "dotenv": "^7.0.0",
-    "minimist": "^1.2.0",
     "moment": "^2.24.0",
     "open": "^6.1.0",
     "puppeteer": "^1.13.0",
     "rimraf": "^2.6.3"
   },
   "scripts": {
-    "start": "tsc && node dist/index.js",
-    "debugMac": "tsc && DEBUG=wa-ar:* node dist/index.js --w=true",
-    "debugWin": "tsc && set DEBUG=wa-ar:* && node dist/index.js --w=true"
+    "build":    "tsc -p .",
+    "lint":     "tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
+    "start":    "yarn build &&                       node -r dotenv/config dist/index.js",
+    "debugMac": "yarn build &&     DEBUG=wa-ar:*     node -r dotenv/config dist/index.js",
+    "debugWin": "yarn build && set DEBUG=wa-ar:* &&  node -r dotenv/config dist/index.js"
   }
 }
