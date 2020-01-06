@@ -7,15 +7,11 @@ import { Page } from "puppeteer";
 
 const sent = {};
 
-const generateMessage = (name: string, text: string) => `
->> -- AUTO-REPLY -- <<
-
-Hola ${name}!
-                    
+const generateMessage = (name: string, text: string) => `>> AUTO-REPLY v1.0.1 (beta) <<
+                  
 ${text}
 
->> --- v1.0.1 (beta) --- <<
-`;
+>> https://github.com/yeikiu/waar <<`;
 
 const sendMessage = async (page: Page, name: string, text: string) => {
     try {
