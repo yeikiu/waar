@@ -15,13 +15,7 @@ const doQRlogin = async (page: Page): Promise<Page> => {
     // const qrPath = `lastqr.png`;
     // await (await page.$('div:nth-child(2) > div:nth-child(2) > div:nth-child(1)')).screenshot({ path: qrPath });
     // await open(qrPath);
-    print(`Please scan the QR code with your phone's WhatsApp scanner.`);
-
-    // try {
-    //     require('fs').unlinkSync(qrPath)
-    // } catch (err) {
-    //     logError(err);
-    // }
+    print(`Please scan the QR code with your phone's WhatsApp scanner.\nMake sure HEADLESS=false in the .env file.`);
 
     await page.waitForSelector('#pane-side', { timeout: 0 });
     print('🙌  Logged IN! 🙌');
@@ -56,7 +50,7 @@ export default {
             page.waitForSelector('#pane-side', { timeout: 0 }),
             page.waitForSelector('.landing-title', { timeout: 0 })
         ]);
-        debug(`Whatsapp-Web Loaded!`);
+        print(`Whatsapp-Web Loaded!`);
 
         // Check if login is needed
         let title = null;

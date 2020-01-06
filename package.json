@@ -21,9 +21,7 @@
     "debug": "^4.1.1",
     "dotenv": "^7.0.0",
     "moment": "^2.24.0",
-    "open": "^6.1.0",
-    "puppeteer": "^1.13.0",
-    "rimraf": "^2.6.3"
+    "puppeteer": "^1.13.0"
   },
   "scripts": {
     "build":    "tsc -p .",

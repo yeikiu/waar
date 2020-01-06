@@ -5,26 +5,24 @@ Auto-Reply for WhatsApp running on NodeJS
 
 Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer) under the hood :smile:
 
-## Features ##
+## Features
+- Login once and remember session
+- Set custom **CHAT_REPLY_INTERVAL_MINUTES**
+- Set custom **CHECK_UNREAD_INTERVAL_SECONDS**
 
-- :white_check_mark: Login once and remember session
-- :white_check_mark: Set custom CHAT_REPLY_INTERVAL_MINUTES
-- :white_check_mark: Set custom CHECK_UNREAD_INTERVAL_SECONDS
-
-## Requirements ##
+## Requirements
 - yarn OR npm
 - NodeJS v8+
 
 Tested on Windows & MacOS X + Node v8.9.1 and puppeteer v0.13.0
 
-## Installation ##
+## Installation
 - Install [yarn](https://yarnpkg.com/lang/en/docs/install)
 - `git clone https://github.com/yeikiu/waar.git` or [download the latest .zip](https://github.com/yeikiu/waar/archive/master.zip)
 - CD into dir: `cd waar`
 - Get dependencies: `yarn`
 
-## Running the bot ##
-
+## Running the bot
 - Finally run `yarn start` for deafult values
 
 OR
@@ -33,16 +31,14 @@ OR
 
 **NOTE:** Once you have connected by scanning QR code, your session will be saved so you won't have to scan it again and again unless you revoke from whatsapp app or by deleting **_tmp** folder. 
 
-## TODO ##
+## TODO
 - Mark each replied chat as unread
 - Detect/handle group chat cells
 - Detect/handle log out
 
-## Contribute ##
-
+## Contribute
 You are welcome to contribute to this project.
 
-## Disclaimer ##
-
+## Disclaimer
 This project is not affiliated with official WhatsApp in any sense.
 All credits for the base code should be for [sarfraznawaz2005](https://github.com/sarfraznawaz2005/whatspup), this repo wouldn't exist without his fork.

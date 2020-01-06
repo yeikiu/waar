@@ -68,7 +68,9 @@ export default {
 
         for (const unread of allUnreads) {
             
-            if( !sent[unread.name] || moment().diff(sent[unread.name], 'minutes') >= CHAT_REPLY_INTERVAL_MINUTES ) {
+            const minsDiff = moment().diff(sent[unread.name], 'minutes');
+
+            if( !sent[unread.name] || minsDiff >= CHAT_REPLY_INTERVAL_MINUTES ) {
                 toReply.push(unread);
 
             } else {
@@ -78,7 +80,7 @@ export default {
                 await page.click(userSelector);
                 await page.waitFor('#main > footer div.selectable-text[contenteditable]');
                 sent[unread.name] = moment();
-                print(`Skipped ${unread.name}'s chat: ${CHAT_REPLY_INTERVAL_MINUTES} minutes  auto-reply is re-enabled`);
+                print(`Skipped ${unread.name}'s chat: Only ${minsDiff} minutes passed since last auto-reply.`);
             }
         }
 
