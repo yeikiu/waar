@@ -30,7 +30,7 @@ const sendMessage = async (page: Page, name: string, text: string) => {
             return false;
         }
 
-        const parts = text.split('\n');
+        const parts = text.replace('/\\+n/g', '\n').split('\n');
 
         for (var i = 0; i < parts.length; i++) {
             await page.keyboard.type(parts[i]);
