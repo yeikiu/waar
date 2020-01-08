@@ -14,6 +14,7 @@
     "@types/puppeteer": "^1.12.2",
     "@typescript-eslint/parser": "^2.14.0",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.19.1",
     "typescript": "^3.3.3333"
   },
@@ -24,10 +25,13 @@
     "puppeteer": "^1.13.0"
   },
   "scripts": {
-    "build":    "tsc -p .",
-    "lint":     "tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
-    "start":    "yarn build &&                       node -r dotenv/config dist/index.js",
-    "debugMac": "yarn build &&     DEBUG=wa-ar:*     node -r dotenv/config dist/index.js",
-    "debugWin": "yarn build && set DEBUG=wa-ar:* &&  node -r dotenv/config dist/index.js"
+    "build": "tsc -p .",
+    "lint": " tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
+    "test": "                       DEBUG=wa-ar:* && jest __tests__ --runInBand --setupFiles dotenv/config",
+    "test:win": "               set DEBUG=wa-ar:* && jest __tests__ --runInBand --setupFiles dotenv/config",
+    "start": "    yarn build &&     DEBUG=wa-ar:*        node    -r dotenv/config dist/index.js",
+    "start:win": "yarn build && set DEBUG=wa-ar:* &&     node    -r dotenv/config dist/index.js",
+    "watch": "                      DEBUG=wa-ar:*        nodemon -r dotenv/config src/index.ts",
+    "watch:win": "              set DEBUG=wa-ar:* &&     nodemon -r dotenv/config src/index.ts"
   }
 }

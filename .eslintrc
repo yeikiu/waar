@@ -1,7 +1,7 @@
 {
     "env": {
         "es6": true,
-        // "commonjs": true,
+        // "commonjs": true, //for browserify/webpack
         "browser": true,
         "node": true
     },
@@ -11,10 +11,22 @@
         "ecmaVersion": 2015 //ES6
     },
     "extends": [
-        //"airbnb-base", // Bit more strict than 'eslint:recommended'
-        "eslint:recommended",
+        "airbnb-base", //Bit more strict than 'eslint:recommended'
+        //"eslint:recommended",
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript"
-    ]
+    ],
+    "rules": {
+        "import/extensions": [
+            "error",
+            "always",
+            {
+                "ignorePackages": true,
+                "pattern": { 
+                    "ts": "never"
+                } 
+            }
+        ]
+    }
 }
