@@ -18,6 +18,11 @@ ${text}
 >> https://github.com/yeikiu/waar <<`;
 
 const sendMessage = async (page: Page, name: string, text: string) => {
+  if (process.env.NODE_ENV === 'development') {
+    print(`TEST: Would have sent to ${name} at ${moment().format('HH:mm')}`);
+    return true;
+  }
+
   try {
     const userSelector = `#pane-side span[title="${name}"]`;
     await page.waitFor(userSelector);
