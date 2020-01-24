@@ -1,3 +1,3 @@
-import MenuHandler from './controllers/menu_handler';
+import WaarMenu from './controllers/menu_render';
 
-MenuHandler.start();
+WaarMenu.start();
