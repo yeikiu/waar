@@ -3,7 +3,7 @@ Auto-Reply for WhatsApp running on NodeJS
 
 <img width="600" alt="waar preview" src="./waar.png">
 
-Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer) under the hood :smile:
+> This bot uses [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer) under the hood :smile:
 
 ## Features
 - Login once and remember session
@@ -12,9 +12,9 @@ Bot is using [GoogleChrome puppeteer!](https://github.com/GoogleChrome/puppeteer
 
 ## Requirements
 - yarn OR npm
-- NodeJS v8+
+- NodeJS
 
-Tested on Windows & MacOS X + Node v8.9.1 and puppeteer v0.13.0
+Tested on Windows & MacOS X + Node v12.8.0 and puppeteer v0.13.0
 
 ## Installation
 - Install [yarn](https://yarnpkg.com/lang/en/docs/install)
@@ -23,21 +23,25 @@ Tested on Windows & MacOS X + Node v8.9.1 and puppeteer v0.13.0
 - Get dependencies: `yarn`
 
 ## Running the bot
-- Finally run `yarn start` for deafult values
+- `yarn start` for deafult values (MacOs/Linux)
+- `yarn start:win` for deafult values (Windows)
 
-OR
+## Custom config
+- Edit `.env` config file values before running with `yarn start`
 
-- edit the default `.env` config file values
+**NOTE:** Once you have connected by scanning QR code, your session will be saved so you won't have to scan it again and again unless you revoke from whatsapp app or by deleting **.cache** folder. 
 
-**NOTE:** Once you have connected by scanning QR code, your session will be saved so you won't have to scan it again and again unless you revoke from whatsapp app or by deleting **_tmp** folder. 
+## Contribute
+You are welcome to contribute to this project.
+
+> Run in dev mode with hot-reloading:
+- `yarn watch`
+- `yarn watch:win`
 
 ## TODO
 - Mark each replied chat as unread
 - Detect/handle group chat cells
 - Detect/handle log out
-
-## Contribute
-You are welcome to contribute to this project.
 
 ## Disclaimer
 This project is not affiliated with official WhatsApp in any sense.
