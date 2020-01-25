@@ -7,11 +7,11 @@ import { Page } from 'puppeteer';
 import debugHelper from '../util/debug_helper';
 
 // eslint-disable-next-line no-unused-vars
-const { debug, logError, print } = debugHelper(__filename);
+const { logError, print } = debugHelper(__filename);
 
 const sent = {};
 
-const generateMessage = (name: string, text: string) => `>> AUTO-REPLY v1.0.1 (beta) <<
+const generateMessage = (name: string, text: string) => `>> AUTO-REPLY v1.0.2 <<
                   
 ${text}
 

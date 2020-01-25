@@ -4,8 +4,8 @@ import { Browser, Page } from 'puppeteer';
 import * as moment from 'moment';
 import debugHelper from '../util/debug_helper';
 
-import BrowserHandler from '../handlers/browser_handler';
-import ChatHandler from '../handlers/chat_handler';
+import BrowserHandler from './browser_handler';
+import ChatHandler from './chat_handler';
 
 const { print } = debugHelper(__filename);
 
