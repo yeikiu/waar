@@ -10,8 +10,20 @@ const waarMenu = nodeMenu
     process.stdout.write(`  >>> Waar v${pkg.version} <<<\n\n`);
   })
   .addDelimiter('~ ', 20)
-  .addItem('Launch Whatsapp Auto-Reply\n', waar.launchWaar)
+
+  .addDelimiter(' ', 1)
+  .addItem(
+    'Launch Whatsapp Auto-Reply',
+    (message: string) => {
+      waar.launchWaar(message !== '*' ? message : 'En estos momentos no puedo responder al WhatsApp.\n\nTe escribo pronto! 🤓');
+    },
+    null,
+    [{ name: '(use \'1 *\' for default message)\"\n\t\"i.e.: 1 Sorry but I cant use my phone right now. Call you later', type: 'string' }],
+  )
+
+  .addDelimiter(' ', 1)
   .addItem('Print current params\n', waar.printParams)
+
   .addDelimiter('~ ', 20)
   .customPrompt(() => {
     process.stdout.write('\nEnter your selection:\n');

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // Output setup
 // eslint-disable-next-line no-unused-vars
 import { Browser, Page } from 'puppeteer';
@@ -13,7 +14,6 @@ const { print } = debugHelper(__filename);
 const {
   NODE_ENV = 'development',
   DATA_DIR_PATH = '.cache',
-  MESSAGE = 'En estos momentos no puedo responder al WhatsApp.\n\nTe escribo pronto! 🤓',
   CHAT_REPLY_INTERVAL_MINUTES = 90,
   CHECK_UNREAD_INTERVAL_SECONDS = 10,
 } = process.env;
@@ -23,13 +23,12 @@ const menuHandler = {
     print({
       NODE_ENV,
       DATA_DIR_PATH,
-      MESSAGE,
       CHAT_REPLY_INTERVAL_MINUTES,
       CHECK_UNREAD_INTERVAL_SECONDS,
     });
   },
 
-  async launchWaar() {
+  async launchWaar(message: string) {
     // Launch Chrome
     const browser: Browser = await BrowserHandler.launchBrowser(DATA_DIR_PATH);
     const page: Page = await BrowserHandler.loadWhatsappWeb(browser);
@@ -39,7 +38,8 @@ const menuHandler = {
     ChatHandler.chatMonitor(
       page,
       Number(CHAT_REPLY_INTERVAL_MINUTES),
-      Number(CHECK_UNREAD_INTERVAL_SECONDS), MESSAGE,
+      Number(CHECK_UNREAD_INTERVAL_SECONDS),
+      message,
     );
   },
 };

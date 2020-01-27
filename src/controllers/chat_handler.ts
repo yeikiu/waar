@@ -59,7 +59,7 @@ export default {
     page: Page,
     CHAT_REPLY_INTERVAL_MINUTES: number,
     CHECK_UNREAD_INTERVAL_SECONDS: number,
-    MESSAGE: string,
+    message: string,
   ) {
     const allUnreads = await page.$eval('#pane-side', (ps) => Array.from(ps.firstChild.firstChild.firstChild.childNodes || [])
       .map((c: any) => ({
@@ -90,7 +90,7 @@ export default {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const target of toReply) {
-      const text = generateMessage(target.name, MESSAGE);
+      const text = generateMessage(target.name, message);
       if (await sendMessage(page, target.name, text)) {
         sent[target.name] = moment();
       } else {
@@ -104,7 +104,7 @@ export default {
         page,
         CHAT_REPLY_INTERVAL_MINUTES,
         CHECK_UNREAD_INTERVAL_SECONDS,
-        MESSAGE,
+        message,
       ),
       CHECK_UNREAD_INTERVAL_SECONDS * 1000,
     );
