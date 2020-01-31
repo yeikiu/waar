@@ -1,6 +1,6 @@
 {
-  "name": "wa-ar",
-  "version": "1.0.2",
+  "name": "waar",
+  "version": "1.0.3",
   "description": "Auto-Reply for WhatsApp running on NodeJS",
   "main": "dist/index.js",
   "keywords": [
@@ -33,11 +33,11 @@
   "scripts": {
     "build": "tsc -p .",
     "lint": " tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
-    "test": "                       DEBUG=wa-ar:* && jest __tests__ --runInBand --setupFiles dotenv/config",
-    "test:win": "               set DEBUG=wa-ar:* && jest __tests__ --runInBand --setupFiles dotenv/config",
-    "start": "    yarn build &&     DEBUG=wa-ar:*        node    -r dotenv/config dist/index.js",
-    "start:win": "yarn build && set DEBUG=wa-ar:* &&     node    -r dotenv/config dist/index.js",
-    "watch": "                      DEBUG=wa-ar:*        nodemon -r dotenv/config src/index.ts",
-    "watch:win": "              set DEBUG=wa-ar:* &&     nodemon -r dotenv/config src/index.ts"
+    "test": "                       DEBUG=waar:* && jest __tests__ --runInBand --setupFiles dotenv/config",
+    "test:win": "               set DEBUG=waar:* && jest __tests__ --runInBand --setupFiles dotenv/config",
+    "start": "    yarn build &&     DEBUG=waar:*        node    -r dotenv/config dist/index.js",
+    "start:win": "yarn build && set DEBUG=waar:* &&     node    -r dotenv/config dist/index.js",
+    "watch": "                      DEBUG=waar:*        nodemon -r dotenv/config src/index.ts",
+    "watch:win": "              set DEBUG=waar:* &&     nodemon -r dotenv/config src/index.ts"
   }
 }

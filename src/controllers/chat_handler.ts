@@ -20,6 +20,7 @@ ${text}
 const sendMessage = async (page: Page, name: string, text: string) => {
   if (process.env.NODE_ENV === 'development') {
     print(`TEST: Would have sent to ${name} at ${moment().format('HH:mm')}`);
+    print({ text });
     return true;
   }
 
@@ -57,8 +58,8 @@ export default {
 
   async chatMonitor(
     page: Page,
-    CHAT_REPLY_INTERVAL_MINUTES: number,
-    CHECK_UNREAD_INTERVAL_SECONDS: number,
+    WAAR_CHAT_REPLY_INTERVAL_MINUTES: number,
+    WAAR_CHECK_UNREAD_INTERVAL_SECONDS: number,
     message: string,
   ) {
     const allUnreads = await page.$eval('#pane-side', (ps) => Array.from(ps.firstChild.firstChild.firstChild.childNodes || [])
@@ -75,7 +76,7 @@ export default {
     for (const unread of allUnreads) {
       const minsDiff = moment().diff(sent[unread.name], 'minutes');
 
-      if (!sent[unread.name] || minsDiff >= CHAT_REPLY_INTERVAL_MINUTES) {
+      if (!sent[unread.name] || minsDiff >= WAAR_CHAT_REPLY_INTERVAL_MINUTES) {
         toReply.push(unread);
       } else {
         // test: check chat
@@ -98,15 +99,15 @@ export default {
       }
     }
 
-    // await page.waitFor(CHECK_UNREAD_INTERVAL_SECONDS * 1000);
+    // await page.waitFor(WAAR_CHECK_UNREAD_INTERVAL_SECONDS * 1000);
     setTimeout(
       () => this.chatMonitor(
         page,
-        CHAT_REPLY_INTERVAL_MINUTES,
-        CHECK_UNREAD_INTERVAL_SECONDS,
+        WAAR_CHAT_REPLY_INTERVAL_MINUTES,
+        WAAR_CHECK_UNREAD_INTERVAL_SECONDS,
         message,
       ),
-      CHECK_UNREAD_INTERVAL_SECONDS * 1000,
+      WAAR_CHECK_UNREAD_INTERVAL_SECONDS * 1000,
     );
   },
 };

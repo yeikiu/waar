@@ -7,8 +7,8 @@ Auto-Reply for WhatsApp running on NodeJS
 
 ## Features
 - Login once and remember session
-- Set custom **CHAT_REPLY_INTERVAL_MINUTES**
-- Set custom **CHECK_UNREAD_INTERVAL_SECONDS**
+- Set custom **WAAR_CHAT_REPLY_INTERVAL_MINUTES**
+- Set custom **WAAR_CHECK_UNREAD_INTERVAL_SECONDS**
 
 ## Requirements
 - yarn OR npm
@@ -23,11 +23,11 @@ Tested on Windows & MacOS X + Node v12.8.0 and puppeteer v0.13.0
 - Get dependencies: `yarn`
 
 ## Running the bot
-- `yarn start` for deafult values (MacOs/Linux)
-- `yarn start:win` for deafult values (Windows)
+- `yarn start` (MacOs/Linux)
+- `yarn start:win` (Windows)
 
 ## Custom config
-- Edit `.env` config file values before running with `yarn start`
+- Edit `.env` config file values before running with `yarn start` or `yarn start:win`
 
 **NOTE:** Once you have connected by scanning QR code, your session will be saved so you won't have to scan it again and again unless you revoke from whatsapp app or by deleting **.cache** folder. 
 

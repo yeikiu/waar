@@ -15,10 +15,10 @@ const waarMenu = nodeMenu
   .addItem(
     'Launch Whatsapp Auto-Reply',
     (message: string) => {
-      waar.launchWaar(message !== '*' ? message : 'En estos momentos no puedo responder al WhatsApp.\n\nTe escribo pronto! 🤓');
+      waar.launchWaar(message !== '*' ? message : process.env.WAAR_DEFAULT_MESSAGE);
     },
     null,
-    [{ name: '(use \'1 *\' for default message)\"\n\t\"i.e.: 1 Sorry but I cant use my phone right now. Call you later', type: 'string' }],
+    [{ name: '(use \'1 *\' for default message)"\n\t"i.e": 1 "Sorry but I cant use my phone right now. Call you later', type: 'string' }],
   )
 
   .addDelimiter(' ', 1)
