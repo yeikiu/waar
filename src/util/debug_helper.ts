@@ -20,7 +20,7 @@ try {
   throw error;
 }
 
-export default (fileName: string, label: string = rootPkg) => {
+export default (fileName: string, label: string = rootPkg.name) => {
   const filePath = path.parse(fileName).name;
 
   const debug = debugLib(`${label}:${filePath}`);

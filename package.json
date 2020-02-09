@@ -24,7 +24,7 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.19.1",
     "nodemon": "^2.0.2",
-    "setup-gh-badges": "^0.0.3",
+    "setup-gh-badges": "^1.0.0",
     "ts-node": "^8.6.2",
     "typescript": "^3.3.3333"
   },
@@ -41,11 +41,6 @@
     "start": "yarn build &&              node -r dotenv/config dist/index.js",
     "watch": "        DEBUG=waar:*    nodemon -r dotenv/config src/index.ts",
     "watch:win": "set DEBUG=waar:* && nodemon -r dotenv/config src/index.ts",
-    "badges:win": "./scripts/generate_badges_win.sh"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "./scripts/generate_badges_win.sh"
-    }
+    "badges:win": "scripts/generate_badges_win.sh"
   }
 }
