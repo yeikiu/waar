@@ -6,7 +6,7 @@
 
 ## Installation & Usage
 
-> `git clone https://github.com/yeikiu/waar.git`
+> `git clone https://github.com/yeikiu/waar`
 
 > `cd waar`
 
