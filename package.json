@@ -36,10 +36,10 @@
         "puppeteer": "^1.13.0"
     },
     "scripts": {
-        "lint": "tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
+        "lint":  "tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
         "build": "tsc -p .",
-        "start": "yarn build &&          node -r dotenv/config dist/index.js",
-        "watch": "DEBUG=waar:*        nodemon -r dotenv/config src/index.ts",
+        "start": "yarn build &&              node -r dotenv/config dist/index.js",
+        "watch": "        DEBUG=waar:*    nodemon -r dotenv/config src/index.ts",
         "watch:win": "set DEBUG=waar:* && nodemon -r dotenv/config src/index.ts",
         "badges:win": "./scripts/generate_badges_win.sh"
     },
