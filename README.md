@@ -4,5 +4,12 @@
 
 > Auto-Reply for WhatsApp running on NodeJS
 
-<img width="600" alt="waar preview" src="./waar.png">
+## Installation & Usage
 
+> `git clone https://github.com/yeikiu/waar.git`
+
+> `cd waar`
+
+> `yarn start` / `npm start`
+
+<img width="600" alt="waar preview" src=".ci/menu_sample.png">
