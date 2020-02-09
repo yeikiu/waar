@@ -11,11 +11,15 @@ const { logError, print } = debugHelper(__filename);
 
 const sent = {};
 
-const generateMessage = (name: string, text: string) => `>> AUTO-REPLY v1.0.2 <<
+const generateMessage = () => {
+  const { WAAR_DEFAULT_MESSAGE } = process.env;
+
+  return `>> AUTO-REPLY v1.0.2 <<
                   
-${text}
+${WAAR_DEFAULT_MESSAGE}
 
 >> https://github.com/yeikiu/waar <<`;
+};
 
 const sendMessage = async (page: Page, name: string, text: string) => {
   if (process.env.NODE_ENV === 'development') {
@@ -60,7 +64,6 @@ export default {
     page: Page,
     WAAR_CHAT_REPLY_INTERVAL_MINUTES: number,
     WAAR_CHECK_UNREAD_INTERVAL_SECONDS: number,
-    message: string,
   ) {
     const allUnreads = await page.$eval('#pane-side', (ps) => Array.from(ps.firstChild.firstChild.firstChild.childNodes || [])
       .map((c: any) => ({
@@ -91,7 +94,7 @@ export default {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const target of toReply) {
-      const text = generateMessage(target.name, message);
+      const text = generateMessage();
       if (await sendMessage(page, target.name, text)) {
         sent[target.name] = moment();
       } else {
@@ -105,7 +108,6 @@ export default {
         page,
         WAAR_CHAT_REPLY_INTERVAL_MINUTES,
         WAAR_CHECK_UNREAD_INTERVAL_SECONDS,
-        message,
       ),
       WAAR_CHECK_UNREAD_INTERVAL_SECONDS * 1000,
     );
