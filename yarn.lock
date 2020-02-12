@@ -2657,10 +2657,10 @@ semver@^6.1.2, semver@^6.3.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
-setup-gh-badges@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/setup-gh-badges/-/setup-gh-badges-1.0.0.tgz#734910e5abecbd4e7c6119c0f56096e7f6e4f60c"
-  integrity sha512-NR0As0KAVMU7woJLI2x0PzMum5k+5E/+XxUEh0fbnb9IjIJcUCNhaf2OmYN1iSR5OBEqJpDJDLYbiKC90Rqlgg==
+setup-gh-badges@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/setup-gh-badges/-/setup-gh-badges-1.0.1.tgz#063ad6e25482aac239f7c326b5d29eaee2f1540b"
+  integrity sha512-HDYGYo5RkgLH2XpaIGgtk//5MrR6XtNqm15t5WsLlqG1RbNnePez7ZUYEqH+F4EIgOscWS/UsAM48INtQCO5qA==
   dependencies:
     gh-badges "^2.2.1"
     jsonfile "^5.0.0"
