@@ -38,11 +38,13 @@
   },
   "scripts": {
     "build": "   rimraf dist && tsc -p .",
-    "lint": "                  tsc -p . --noEmit        && eslint  \"src/**/*.{js,ts}\" --quiet --fix",
-    "start": "    yarn build &&     DEBUG=PROJECT_NAME:*    node    -r dotenv/config dist/index.js",
-    "start:win": "yarn build && set DEBUG=PROJECT_NAME:* && node    -r dotenv/config dist/index.js",
-    "watch": "                      DEBUG=PROJECT_NAME:*    nodemon -r dotenv/config  src/index.ts",
-    "watch:win": "              set DEBUG=PROJECT_NAME:* && nodemon -r dotenv/config  src/index.ts",
+    "lint": "                   tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
+    
+    "start": "    yarn build &&     DEBUG=waar:*     node    -r dotenv/config  dist/index.js",
+    "start:win": "yarn build && set DEBUG=waar:*  && node    -r dotenv/config  dist/index.js",
+    "watch": "                      DEBUG=waar:*     nodemon -r dotenv/config  src/index.ts",
+    "watch:win": "              set DEBUG=waar:*  && nodemon -r dotenv/config  src/index.ts",
+
     "badges:win": "scripts/generate_badges_win.sh"
   }
 }
