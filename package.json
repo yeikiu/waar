@@ -1,21 +1,21 @@
 {
   "name": "waar",
   "version": "1.0.6",
-  "description": "Auto-Reply for WhatsApp running on NodeJS",
   "main": "dist/index.js",
+  "description": "Auto-Reply for WhatsApp running on NodeJS",
+  "author": "@yeikiu",
+  "bugs": {
+    "url": "https://github.com/yeikiu/waar/issues"
+  },
   "keywords": [
     "whatsapp",
     "node"
   ],
-  "author": "@yeikiu",
+  "license": "CC0-1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/yeikiu/waar.git"
   },
-  "bugs": {
-    "url": "https://github.com/yeikiu/waar/issues"
-  },
-  "license": "CC0-1.0",
   "dependencies": {
     "debug": "^4.1.1",
     "dotenv": "^7.0.0",
@@ -30,6 +30,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.19.1",
+    "lint-package": "^1.0.1",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",
     "setup-gh-badges": "^1.0.1",
@@ -37,14 +38,13 @@
     "typescript": "^3.3.3333"
   },
   "scripts": {
-    "build": "   rimraf dist && tsc -p .",
-    "lint": "                   tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
-    
-    "start": "    yarn build &&     DEBUG=waar:*     node    -r dotenv/config  dist/index.js",
-    "start:win": "yarn build && set DEBUG=waar:*  && node    -r dotenv/config  dist/index.js",
-    "watch": "                      DEBUG=waar:*     nodemon -r dotenv/config  src/index.ts",
-    "watch:win": "              set DEBUG=waar:*  && nodemon -r dotenv/config  src/index.ts",
-
-    "badges:win": "scripts/generate_badges_win.sh"
+    "build": "       rimraf dist && tsc -p .",
+    "lint": "        tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
+    "start": "       yarn build &&     DEBUG=waar:*    node -r dotenv/config dist/index.js",
+    "start:win": "   yarn build && set DEBUG=waar:* && node -r dotenv/config dist/index.js",
+    "watch": "           DEBUG=waar:*    nodemon -r dotenv/config src/index.ts",
+    "watch:win": "   set DEBUG=waar:* && nodemon -r dotenv/config src/index.ts",
+    "badges:win": "  scripts/generate_badges_win.sh",
+    "lint:package": "node node_modules/lint-package"
   }
 }

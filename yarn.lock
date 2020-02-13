@@ -1838,6 +1838,11 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+lint-package@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/lint-package/-/lint-package-1.0.1.tgz#d8158448b228bc8ca5581edf32c424773ec7ced3"
+  integrity sha512-i3u0/CYpHmvTUsvjNTT2SlMndh3lExSLrfqUnNrh7W2n3sBk+yPJOtOiflcA5MH54acYn4hYSsCH7CgrU0+eSA==
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
