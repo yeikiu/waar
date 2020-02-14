@@ -1,13 +1,10 @@
 import waar from './menu_handler';
 
-const nodeMenu = require('node-menu');
-const path = require('path');
-// eslint-disable-next-line import/no-dynamic-require
-const pkg = require(path.resolve('package'));
+import nodeMenu = require('node-menu');
 
 const waarMenu = nodeMenu
   .customHeader(() => {
-    process.stdout.write(`  >>> Waar v${pkg.version} <<<\n\n`);
+    process.stdout.write(`  >>> waar <<<\n\n`);
   })
 
   .addDelimiter('~ ', 20)

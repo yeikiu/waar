@@ -1,13 +1,12 @@
 // Output setup
-// eslint-disable-next-line no-unused-vars
-import { Browser, Page } from 'puppeteer';
-import debugHelper from '../util/debug_helper';
 
+import debugHelper from '../util/debug_helper';
 // eslint-disable-next-line no-unused-vars
 const { debug, logError, print } = debugHelper(__filename);
 
-const path = require('path');
-const puppeteer = require('puppeteer');
+import { Browser, Page } from 'puppeteer';
+import path = require('path');
+import puppeteer = require('puppeteer');
 
 const doQRlogin = async (page: Page): Promise<Page> => {
   print('Login required, please wait while QR code is generated');
@@ -21,7 +20,7 @@ const doQRlogin = async (page: Page): Promise<Page> => {
 
 export default {
 
-  launchBrowser(dataDirPath: string): Browser {
+  launchBrowser(dataDirPath: string): Promise<Browser> {
     return puppeteer.launch({
       // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
       headless: false,

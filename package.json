@@ -1,6 +1,6 @@
 {
   "name": "waar",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "dist/index.js",
   "description": "Auto-Reply for WhatsApp running on NodeJS",
   "author": "@yeikiu",
@@ -26,25 +26,25 @@
   "devDependencies": {
     "@types/node": "^11.11.0",
     "@types/puppeteer": "^1.12.2",
-    "@typescript-eslint/parser": "^2.14.0",
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-import": "^2.20.1",
     "lint-package": "^1.0.2",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",
-    "setup-gh-badges": "^1.0.1",
+    "setup-gh-badges": "^1.0.4",
     "ts-node": "^8.6.2",
     "typescript": "^3.3.3333"
   },
   "scripts": {
     "build": "     rimraf dist && tsc -p .",
-    "lint": "      tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
+    "lint": "                     tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
     "start": "     yarn build &&     DEBUG=waar:*    node -r dotenv/config dist/index.js",
     "start:win": " yarn build && set DEBUG=waar:* && node -r dotenv/config dist/index.js",
     "watch": "         DEBUG=waar:*    nodemon -r dotenv/config src/index.ts",
     "watch:win": " set DEBUG=waar:* && nodemon -r dotenv/config src/index.ts",
-    "badges:win": "scripts/generate_badges_win.sh",
+    "badges:win": "     node_modules/setup-gh-badges/generate_badges_win.sh",
     "lint:pkg": "  node node_modules/lint-package"
   }
 }
