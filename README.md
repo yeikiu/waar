@@ -14,4 +14,4 @@
 
 ---
 
-<img width="600" alt="waar preview" src=".ci/menu_sample.png">
+<img width="600" alt="waar preview" src=".ci_badges/menu_demo.png">

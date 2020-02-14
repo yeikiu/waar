@@ -10,12 +10,7 @@ const waarMenu = nodeMenu
   .addDelimiter('~ ', 20)
   .addItem(
     'Launch Whatsapp Auto-Reply',
-    (message: string) => {
-      if (message !== '*') process.env.WAAR_DEFAULT_MESSAGE = message;
-      waar.launchWaar();
-    },
-    null,
-    [{ name: '\'1 *\' (default message) OR 1 <YOUR MESSAGE>', type: 'string' }],
+    waar.launchWaar,
   )
 
   .addDelimiter(' ', 1)
@@ -28,7 +23,7 @@ const waarMenu = nodeMenu
       process.env.WAAR_DEFAULT_MESSAGE = message;
     },
     null,
-    [{ name: '3 <YOUR MESSAGE>', type: 'string' }],
+    [{ name: '\n\n   i.e. >> 3 "I can´t answer now. Call you later! :-)', type: 'string' }],
   )
 
   .addDelimiter(' ', 1)
