@@ -1,6 +1,6 @@
 {
   "name": "waar",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "dist/index.js",
   "description": "Auto-Reply for WhatsApp running on NodeJS",
   "author": "@yeikiu",
