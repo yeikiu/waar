@@ -11,7 +11,3 @@
     cd waar
 
     yarn start / npm start
-
----
-
-<img width="600" alt="waar preview" src=".ci_badges/menu_demo.png">
