@@ -14,7 +14,7 @@ const {
 
 const doQRlogin = async (page: Page): Promise<Page> => {
   print('Login required, please wait while QR code is generated');
-  await page.waitForSelector('img[alt="Scan me!"]', { timeout: 0 });
+  await page.waitForSelector('canvas[aria-label="Scan me!"]', { timeout: 0 });
   print('Please scan the QR code with your phone\'s WhatsApp scanner');
 
   await page.waitForSelector('#pane-side', { timeout: 0 });
