@@ -5,8 +5,12 @@ import debugHelper from '../util/debug_helper';
 const { debug, logError, print } = debugHelper(__filename);
 
 import { Browser, Page } from 'puppeteer';
-import path = require('path');
 import puppeteer = require('puppeteer');
+
+const {
+  // BOT_CHROME_EXECUTABLE_PATH = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+  CHROME_USER_DATA_PATH = 'C:/Users/JQ/AppData/Local/Google/Chrome/User Data',
+} = process.env;
 
 const doQRlogin = async (page: Page): Promise<Page> => {
   print('Login required, please wait while QR code is generated');
@@ -18,17 +22,18 @@ const doQRlogin = async (page: Page): Promise<Page> => {
   return page;
 };
 
-export default {
-
-  launchBrowser(dataDirPath: string): Promise<Browser> {
+export default {  
+  launchBrowser (chromeProfileName = 'Default'): Promise<Browser> {  
     return puppeteer.launch({
       // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
-      headless: false,
+      headless: false, // doesn't work well with official Chrome
+      // ignoreDefaultArgs: true, // use true for official Chrome
       args: [
-        `--user-data-dir=${path.resolve(dataDirPath)}`,
-        '--disable-dev-shm-usage',
+        `--user-data-dir=${CHROME_USER_DATA_PATH}`,
+        `--profile-directory=${chromeProfileName}`,
+        // `--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36`
       ],
-      // executablePath: CHROME_PATH
+      // executablePath: BOT_CHROME_EXECUTABLE_PATH,
     });
   },
 
