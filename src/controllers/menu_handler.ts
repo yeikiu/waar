@@ -14,7 +14,7 @@ const { print } = debugHelper(__filename);
 const {
   WAAR_CHAT_REPLY_INTERVAL_MINUTES = 90,
   WAAR_CHECK_UNREAD_INTERVAL_SECONDS = 10,
-  WAAR_CHROME_PROFILE = '.waarChromeProfile'
+  WAAR_CHROME_DATA_DIR = '.waarChromeProfile'
 } = process.env;
 
 const menuHandler = {
@@ -30,7 +30,7 @@ const menuHandler = {
 
   async launchWaar() {
     // Launch Chrome
-    const browser: Browser = await BrowserHandler.launchBrowser(WAAR_CHROME_PROFILE);
+    const browser: Browser = await BrowserHandler.launchBrowser();
     const page: Page = await BrowserHandler.loadWhatsappWeb(browser);
 
     // Leaves the chromium browser open with WhatsApp web loaded
