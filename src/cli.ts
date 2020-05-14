@@ -1,10 +1,24 @@
-import waar from './menu_handler';
+#!/usr/bin/env node
 
+import waar from './controllers/menu_handler';
 import nodeMenu = require('node-menu');
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
-const waarMenu = nodeMenu
+const [,, arg] = process.argv;
+
+const pkgPath = resolve(__dirname, '..', 'package.json');
+const { name, version } = JSON.parse(readFileSync(pkgPath).toString())
+
+// display version and short-circuit exit
+if (/-v.*/.test(arg)) {    
+    console.log(`${name} v${version}`);
+    process.exit();
+}
+
+nodeMenu
   .customHeader(() => {
-    process.stdout.write(`  >>> waar <<<\n\n`);
+    process.stdout.write(`  >>> ${name} v${version} <<<\n\n`);
   })
 
   .addDelimiter('~ ', 20)
@@ -33,6 +47,5 @@ const waarMenu = nodeMenu
   })
   .continueCallback(() => {
     // Runs between 'Press enter to continue' and the new menu render
-  });
-
-export default waarMenu;
+  })
+  .start();

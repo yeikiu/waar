@@ -1,20 +1,24 @@
-// Output setup
-
-import debugHelper from '../util/debug_helper';
-// eslint-disable-next-line no-unused-vars
-const { debug, logError, print } = debugHelper(__filename);
-
+import qrcode = require('qrcode-terminal');
+import { resolve } from 'path';
 import { Browser, Page } from 'puppeteer';
 import puppeteer = require('puppeteer');
+import debugHelper from '../util/debug_helper';
+
+const { debug, print } = debugHelper(__filename);
 
 const {
-  // BOT_CHROME_EXECUTABLE_PATH = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   WAAR_CHROME_DATA_DIR = '.waarChromeProfile',
+  WAAR_HEADLESS = 'true'
 } = process.env;
 
 const doQRlogin = async (page: Page): Promise<Page> => {
-  print('Login required, please wait while QR code is generated');
-  await page.waitForSelector('canvas[aria-label="Scan me!"]', { timeout: 0 });
+  print('Login required! Please wait while QR code is generated...');
+  await page.waitForSelector('div[data-ref]', { timeout: 0 });
+
+  const dataRef = await page.$eval('div[data-ref]', div => div.getAttribute('data-ref'));
+  debug({ dataRef });
+  qrcode.generate(dataRef, {small: true});
+
   print('Please scan the QR code with your phone\'s WhatsApp scanner');
 
   await page.waitForSelector('#pane-side', { timeout: 0 });
@@ -23,17 +27,18 @@ const doQRlogin = async (page: Page): Promise<Page> => {
 };
 
 export default {  
-  launchBrowser (): Promise<Browser> {  
+  launchBrowser (): Promise<Browser> {
+    // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
+
+    const headless = String(WAAR_HEADLESS) === 'true';
     return puppeteer.launch({
-      // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
-      headless: false, // doesn't work well with official Chrome
-      // ignoreDefaultArgs: true, // use true for official Chrome
+      ignoreDefaultArgs: true, // Do not use puppeteer.defaultArgs() for launching Chromium. Recommended to run Official Chrome with 'executablePath' 
       args: [
-        `--user-data-dir=${WAAR_CHROME_DATA_DIR}`,
-        // `--profile-directory=${chromeProfileName}`,
-        // `--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36`
+        `--user-data-dir=${resolve(process.cwd(), WAAR_CHROME_DATA_DIR)}`,
+        '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
+        ...headless ? ['--headless=true'] : []
       ],
-      // executablePath: BOT_CHROME_EXECUTABLE_PATH,
+      headless
     });
   },
 
@@ -48,22 +53,20 @@ export default {
     // Let the UI load
     await Promise.race([
       page.waitForSelector('#pane-side', { timeout: 0 }),
-      page.waitForSelector('.landing-title', { timeout: 0 }),
+      page.waitForSelector('canvas[aria-label="Scan me!"]', { timeout: 0 }),
     ]);
     print('Whatsapp-Web Loaded!');
 
     // Check if login is needed
-    let title = null;
     try {
-      title = await page.$eval('.landing-title', (t) => {
-        if (!t) return null;
-        return t.textContent;
+      await page.$eval('canvas[aria-label="Scan me!"]', () => {    
+        // QR login needed
+        return doQRlogin(page)
       });
-    } catch (e) { print('Already logged in, loading chats...'); }
+    } catch({ code, message }) {
+      print('Already logged in, loading chats...'); 
+    }
 
-    if (title === null) { return page; }
-
-    // QR login needed
-    return doQRlogin(page);
+    return page;
   },
 };
