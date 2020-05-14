@@ -1,4 +1,4 @@
-name: release_to_npm
+name: sync_badges
 on:
   release:
     types: [ created ]
@@ -24,19 +24,3 @@ jobs:
       - uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-  build_and_publish:
-    runs-on: ubuntu-18.04
-    needs: sync_badges
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: master
-
-      - uses: actions/setup-node@v1
-        with:
-          registry-url: https://registry.npmjs.org/
-
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
