@@ -1,10 +1,7 @@
 {
   "name": "waar",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "dist/cli.js",
-  "bin": {
-    "waar": "./dist/cli.js"
-  },
   "description": "🤖💬 WhatsApp Auto-Reply node cli",
   "author": "@yeikiu",
   "bugs": {
