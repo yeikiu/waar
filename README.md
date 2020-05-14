@@ -7,8 +7,10 @@
 
 ## 📝 Installation & Usage
 
-    git clone https://github.com/yeikiu/waar
+- `git clone https://github.com/yeikiu/waar`
 
-    cd waar
+- `cd waar`
 
-    yarn start / npm (run) start
+- `yarn (install)`
+
+- `yarn start` OR `npm (run) start` OR `npx waar`
