@@ -3,13 +3,18 @@
 import * as moment from 'moment';
 import { Page } from 'puppeteer';
 import { ChatCell } from '../types/chat_cell';
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
 import debugHelper from '../util/debug_helper';
 const { debug, logError, print } = debugHelper(__filename);
+
+const pkgPath = resolve(__dirname, '../..', 'package.json');
+const { name, version } = JSON.parse(readFileSync(pkgPath).toString())
 
 const generateMessage = (): string => {
   const { WAAR_DEFAULT_MESSAGE } = process.env;
 
-  return `>> 🤖💬 *Whatsapp AUTO-REPLY* v1.0.2 <<
+  return `🤖💬 *Whatsapp AUTO-REPLY* v${version}
                   
 ${WAAR_DEFAULT_MESSAGE}
 
