@@ -9,7 +9,7 @@ const { debug, logError, print } = debugHelper(__filename);
 const generateMessage = (): string => {
   const { WAAR_DEFAULT_MESSAGE } = process.env;
 
-  return `>> *Whatsapp AUTO-REPLY* v1.0.2 <<
+  return `>> 🤖💬 *Whatsapp AUTO-REPLY* v1.0.2 <<
                   
 ${WAAR_DEFAULT_MESSAGE}
 
