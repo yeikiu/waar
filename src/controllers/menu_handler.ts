@@ -26,8 +26,8 @@ const menuHandler = {
     const page: Page = await BrowserHandler.loadWhatsappWeb(browser);
 
     // Launch Chat Monitor
-    print(`WhatsApp Web Auto-Reply started | ${moment().format('HH:mm DD/MM/YYYY')}`);
-    ChatHandler.chatMonitor(page);
+    print(`WhatsApp Web Auto-Reply started ${moment().format('HH:mm DD/MM/YYYY')} ✔️`);
+    ChatHandler.monitorUnreadMessages(page);
   },
 };
 

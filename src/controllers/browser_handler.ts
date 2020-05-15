@@ -12,22 +12,24 @@ const {
 } = process.env;
 
 const doQRlogin = async (page: Page): Promise<Page> => {
-  print('Login required! Please wait while QR code is generated');
+  print('Login required! Please wait while QR code is generated ⏳');
   await page.waitForSelector('div[data-ref]', { timeout: 0 });
 
   const dataRef = await page.$eval('div[data-ref]', div => div.getAttribute('data-ref'));
   debug({ dataRef });
   qrcode.generate(dataRef, {small: true});
 
-  print('Please scan the QR code above with your phone\'s WhatsApp scanner');
+  print('Please scan the QR code above with your phone\'s WhatsApp scanner ☝️');
 
   await page.waitForSelector('#pane-side', { timeout: 0 });
-  print('🙌  Logged IN! 🙌');
+  print('Logged IN! 🙌');
+  print('Loading chats ⏳');
   return page;
 };
 
 export default {  
   launchBrowser (): Promise<Browser> {
+    print('Launching browser ⏳');
     // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
 
     const headless = String(WAAR_HEADLESS) === 'true';
@@ -43,7 +45,7 @@ export default {
   },
 
   async loadWhatsappWeb(browser: Browser): Promise<Page> {
-    print('Loading Whatsapp-Web, please wait...');
+    print('Loading Whatsapp-Web ⏳');
     const page = (await browser.pages())[0];
     page.setViewport({ width: 1024, height: 768 });
     await page.goto('https://web.whatsapp.com/', {
@@ -56,12 +58,14 @@ export default {
       page.waitForSelector('#pane-side', { timeout: 0 }),
       page.waitForSelector('canvas[aria-label="Scan me!"]', { timeout: 0 }),
     ]);
-    print('Whatsapp-Web Loaded! Checking session status...');
+    print('Whatsapp-Web Loaded! ✔️');
+    print('Checking previous session status 👀');
 
     // Check if login is needed
     const paneSide = await page.$('#pane-side');
     if (paneSide !== null) {
-      print('Already logged in, loading chats...'); 
+      print('Already logged in! 🙌')
+      print('Loading chats ⏳');
       return page;
     }
     

@@ -9,7 +9,7 @@ import debugHelper from '../util/debug_helper';
 const { debug, logError, print } = debugHelper(__filename);
 
 const pkgPath = resolve(__dirname, '../..', 'package.json');
-const { name, version } = JSON.parse(readFileSync(pkgPath).toString())
+const { version } = JSON.parse(readFileSync(pkgPath).toString())
 
 const generateMessage = (): string => {
   const { WAAR_DEFAULT_MESSAGE } = process.env;
@@ -29,7 +29,7 @@ const sendMessage = async (page: Page, name: string, text: string): Promise<bool
     await page.waitFor('#main > footer div.selectable-text[contenteditable]');
 
     if (process.env.NODE_ENV !== 'production') {
-      print(`TEST: Would have sentCache to ${name} at ${moment().format('HH:mm')}`);
+      print(`TEST: Would have sent to ${name} at ${moment().format('HH:mm')} ✔️`);
       print({ text });
       return true;
     }
@@ -37,7 +37,7 @@ const sendMessage = async (page: Page, name: string, text: string): Promise<bool
     await page.click('#main > footer div.selectable-text[contenteditable]');
     const titleName = await page.$eval('#main > header span[title]', (e) => e.textContent);
     if (titleName !== name) {
-      logError(`Can't load chat with ${name}`);
+      logError(`Can't load chat with ${name} ❌`);
       return false;
     }
 
@@ -52,7 +52,7 @@ const sendMessage = async (page: Page, name: string, text: string): Promise<bool
 
     await page.waitFor(1000);
     await page.keyboard.press('Enter');
-    print(`Sent to ${name} at ${moment().format('HH:mm')}`);
+    print(`Sent to ${name} at ${moment().format('HH:mm')} ✔️`);
     return true;
   } catch (e) {
     return false;
@@ -63,10 +63,10 @@ const sentCache = {};
 
 export default {
 
-  async chatMonitor(
+  async monitorUnreadMessages(
     page: Page,
   ): Promise<void> {
-    
+
     // Load config
     const {
       WAAR_CHAT_REPLY_INTERVAL_MINUTES = 90,
@@ -76,49 +76,55 @@ export default {
     const chatReplyIntervalMinutes = Number(WAAR_CHAT_REPLY_INTERVAL_MINUTES);
     const checkUnreadIntervalSeconds = Number(WAAR_CHECK_UNREAD_INTERVAL_SECONDS);
 
-    const allUnreads: ChatCell[] = await page.$eval('#pane-side div:nth-child(1) div:nth-child(1) div:nth-child(1)', (ps) => Array.from(ps.childNodes || [])
-      .map((c: ChildNode) => ({
-        isGroup: c.lastChild.parentElement.innerHTML.includes('span data-icon="default-group"'),
-        numUnread: Number(c.lastChild.lastChild.lastChild.lastChild.lastChild.textContent || 0),
-        chatName: c.lastChild.firstChild.lastChild.firstChild.firstChild.textContent || '',
-      }))
-      .filter((c: ChatCell) => !c.isGroup && c.numUnread > 0 && c.chatName.length > 0)
-    );
-    debug({ allUnreads })  ;
+    try {
 
-    const toReply = [];
+      const allUnreads: ChatCell[] = await page.$eval('#pane-side div:nth-child(1) div:nth-child(1) div:nth-child(1)', (ps) => Array.from(ps.childNodes || [])
+        .map((c: ChildNode) => ({
+          isGroup: c.lastChild.parentElement.innerHTML.includes('span data-icon="default-group"'),
+          numUnread: Number(c.lastChild.lastChild.lastChild.lastChild.lastChild.textContent || 0),
+          chatName: c.lastChild.firstChild.lastChild.firstChild.firstChild.textContent || '',
+        }))
+        .filter((c: ChatCell) => !c.isGroup && c.numUnread > 0 && c.chatName.length > 0)
+      );
+      debug({ allUnreads })  ;
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const { chatName } of allUnreads) {
-      const minsDiff = moment().diff(sentCache[chatName], 'minutes');
+      const toReply = [];
 
-      if (!sentCache[chatName] || minsDiff >= chatReplyIntervalMinutes) {
-        toReply.push(chatName);
+      // eslint-disable-next-line no-restricted-syntax
+      for (const { chatName } of allUnreads) {
+        const minsDiff = moment().diff(sentCache[chatName], 'minutes');
 
-      } else {
-        // Mark chat cell as read by clicking on it
-        const userSelector = `#pane-side span[title="${chatName}"]`;
-        await page.waitFor(userSelector);
-        await page.click(userSelector);
-        await page.waitFor('#main > footer div.selectable-text[contenteditable]');
-        sentCache[chatName] = moment();
-        print(`Skipped ${chatName}'s chat: Only ${minsDiff} minutes passed since last auto-reply.`);
+        if (!sentCache[chatName] || minsDiff >= chatReplyIntervalMinutes) {
+          toReply.push(chatName);
+
+        } else {
+          // Mark chat cell as read by clicking on it
+          const userSelector = `#pane-side span[title="${chatName}"]`;
+          await page.waitFor(userSelector);
+          await page.click(userSelector);
+          await page.waitFor('#main > footer div.selectable-text[contenteditable]');
+          sentCache[chatName] = moment();
+          print(`Skipped ${chatName}'s chat: Only ${minsDiff} minutes passed since last auto-reply. ⏲️`);
+        }
       }
-    }
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const chatName of toReply) {
-      const text = generateMessage();
-      if (await sendMessage(page, chatName, text)) {
-        sentCache[chatName] = moment();
+      // eslint-disable-next-line no-restricted-syntax
+      for (const chatName of toReply) {
+        const text = generateMessage();
+        if (await sendMessage(page, chatName, text)) {
+          sentCache[chatName] = moment();
 
-      } else {
-        logError(`Failed messaging ${chatName}`);
+        } else {
+          logError(`Failed messaging ${chatName} ❌`);
+        }
       }
+
+    } catch({ code, message }) {
+      logError(`monitorUnreadMessages error: ${message} ❌`);
     }
 
     setTimeout(
-      () => this.chatMonitor(page),
+      () => this.monitorUnreadMessages(page),
       checkUnreadIntervalSeconds * 1000,
     );
   },
