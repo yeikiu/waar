@@ -3,7 +3,7 @@
 # 🤖💬 waar | WhatsApp Auto-Reply node cli
 
 - Run headless (no browser UI showed) 
-- Keep session open for next uses (scan QR only once)
+- Keep session stored for next uses (scan QR directly from terminal and only once)
 
 ## 📝 Installation & Usage
 
@@ -13,4 +13,4 @@
 
 - `yarn (install)`
 
-- `yarn start` OR `npm (run) start` OR `npx waar`
+- `yarn start` OR `npm (run) start`
