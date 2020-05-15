@@ -104,7 +104,7 @@ export default {
           await page.click(userSelector);
           await page.waitFor('#main > footer div.selectable-text[contenteditable]');
           sentCache[chatName] = moment();
-          print(`Skipped ${chatName}'s chat: Only ${minsDiff} minutes passed since last auto-reply. ⏲️`);
+          print(`Skipped ${chatName}'s chat: Only ${minsDiff} minutes passed since last auto-reply...`);
         }
       }
 

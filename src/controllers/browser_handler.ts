@@ -22,7 +22,7 @@ const doQRlogin = async (page: Page): Promise<Page> => {
   print('Please scan the QR code above with your phone\'s WhatsApp scanner ☝️');
 
   await page.waitForSelector('#pane-side', { timeout: 0 });
-  print('Logged IN! 🙌');
+  print('Logged IN! ✔️');
   print('Loading chats ⏳');
   return page;
 };
@@ -59,12 +59,12 @@ export default {
       page.waitForSelector('canvas[aria-label="Scan me!"]', { timeout: 0 }),
     ]);
     print('Whatsapp-Web Loaded! ✔️');
-    print('Checking previous session status 👀');
+    print('Checking for existing session...');
 
     // Check if login is needed
     const paneSide = await page.$('#pane-side');
     if (paneSide !== null) {
-      print('Already logged in! 🙌')
+      print('Already logged in! ✔️')
       print('Loading chats ⏳');
       return page;
     }
