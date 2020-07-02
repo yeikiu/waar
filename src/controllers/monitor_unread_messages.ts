@@ -2,7 +2,6 @@
 
 import * as moment from 'moment';
 import { Page, Browser } from 'puppeteer';
-import { ChatCell } from '../types/chat_cell';
 import debugHelper from '../util/debug_helper';
 import sendMessage from './send_message';
 import generateMessage from './generate_message';
@@ -10,7 +9,7 @@ import { schedule } from 'node-cron'
 import launchBrowser from './launch_browser';
 import loadWhatsappWeb from './load_whatsapp_web';
 
-const { debug, logError, print } = debugHelper(__filename);
+const { logError, print } = debugHelper(__filename);
 
 const sentCache = {};
 let isRunning = false;
@@ -35,45 +34,49 @@ const monitorUnreadMessages = async (): Promise<void> => {
       print(`WhatsApp Web Auto-Reply started ${moment().format('HH:mm DD/MM/YYYY')} ✔️`);
     }
 
-    const allUnreads: ChatCell[] = await page.$eval('#pane-side div:nth-child(1) div:nth-child(1) div:nth-child(1)', (ps) => Array.from(ps.childNodes || [])
-        .map((c: ChildNode) => ({
-          isGroup: c.lastChild.parentElement.innerHTML.includes('span data-testid="default-group"'),
-          numUnread: Number(c.lastChild.lastChild.lastChild.lastChild.lastChild.textContent || 0),
-          chatName: c.lastChild.firstChild.lastChild.firstChild.firstChild.textContent || '',
-        }))
-        .filter((c: ChatCell) => !c.isGroup && c.numUnread > 0 && c.chatName.length > 0)
-      );
+    await page.waitForSelector('span[data-testid="default-user"]', { timeout: 0 });
+    const userChats = (await Promise.all((await page.$$('span[data-testid="default-user"]')) // use default-user for groups
+      .map((el) => {
+        return el.evaluate(el => {
+          const chatCell = el.parentElement.parentElement.parentElement.parentElement
+          return {
+            text: chatCell.textContent,
+            numUnread: Number(chatCell.lastChild.lastChild.lastChild.textContent || 0),
+            userName: chatCell.lastElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.getAttribute('title') || ''
+          }
+        })
+      })))
+      .filter(({ text, numUnread }) => text && numUnread > 0)
 
-    debug({ allUnreads });
-
+    // debug({ userChats });
     const toReply = [];
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const { chatName } of allUnreads) {
-      const minsDiff = moment().diff(sentCache[chatName], 'minutes');
+    for (const { userName } of userChats) {
+      const minsDiff = moment().diff(sentCache[userName], 'minutes');
 
-      if (!sentCache[chatName] || minsDiff >= chatReplyIntervalMinutes) {
-        toReply.push(chatName);
+      if (!sentCache[userName] || minsDiff >= chatReplyIntervalMinutes) {
+        toReply.push(userName);
 
       } else {
         // Mark chat cell as read by clicking on it
-        const userSelector = `span[title="${chatName}"]`;
+        const userSelector = `span[title="${userName}"]`;
         await page.waitFor(userSelector);
         await page.click(userSelector);
         await page.waitFor('#main > footer div.selectable-text[contenteditable]');
-        sentCache[chatName] = moment();
-        print(`Skipped ${chatName}'s chat: Only ${minsDiff} minutes passed since last auto-reply...`);
+        sentCache[userName] = moment();
+        print(`Skipped ${userName}'s chat: Only ${minsDiff} minutes passed since last auto-reply...`);
       }
     }
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const chatName of toReply) {
+    for (const userName of toReply) {
       const text = generateMessage();
-      if (await sendMessage(page, chatName, text)) {
-        sentCache[chatName] = moment();
+      if (await sendMessage(page, userName, text)) {
+        sentCache[userName] = moment();
 
       } else {
-        logError(`Failed messaging ${chatName} ❌`);
+        logError(`Failed messaging ${userName} ❌`);
       }
     }
 
@@ -84,6 +87,6 @@ const monitorUnreadMessages = async (): Promise<void> => {
   isRunning = false;
 };
 
-const { start: startMonitorUnreadMessages, stop: stopMonitorUnreadMessages } = schedule('*/15 * * * * *', monitorUnreadMessages, { scheduled: false })
+const { start: startMonitorUnreadMessages, stop: stopMonitorUnreadMessages } = schedule('*/10 * * * * *', monitorUnreadMessages, { scheduled: false })
 
-export { startMonitorUnreadMessages, stopMonitorUnreadMessages }
+export { startMonitorUnreadMessages, stopMonitorUnreadMessages, monitorUnreadMessages }

@@ -31,7 +31,7 @@ nodeMenu
 
   .addDelimiter(' ', 1)
   .addItem('Change default Auto-Reply message', (message: string) => { process.env.WAAR_DEFAULT_MESSAGE = message; }, null, [{ name: '<new_response>" | i.e. >> 3 "I can´t answer now. Call you later! :-)', type: 'string' }])
-  .addItem('Change per-chat reply interval', (minutes: number) => { process.env.WAAR_CHAT_REPLY_INTERVAL_MINUTES = minutes.toString(); }, null, [{ name: '<minutes>" | i.e. >> "5 90', type: 'numeric' }])
+  .addItem('Change per-chat interval between replies', (minutes: number) => { process.env.WAAR_CHAT_REPLY_INTERVAL_MINUTES = minutes.toString(); }, null, [{ name: '<minutes>" | i.e. >> "5 90', type: 'numeric' }])
 
   .addDelimiter(' ', 1)
   .addDelimiter('~ ', 20)
