@@ -11,6 +11,6 @@
 
 - `cd waar`
 
-- `yarn (install)`
+- `yarn (install dependencies once)`
 
 - `yarn start` OR `npm (run) start`

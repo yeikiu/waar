@@ -1,19 +1,20 @@
 #!/usr/bin/env node
 
-import waar from './controllers/menu_handler';
-import nodeMenu = require('node-menu');
+import * as nodeMenu from 'node-menu';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
+import printEnvs from './controllers/print_envs';
+import { startMonitorUnreadMessages, stopMonitorUnreadMessages } from './controllers/monitor_unread_messages';
 
-const [,, arg] = process.argv;
+const [, , arg] = process.argv;
 
 const pkgPath = resolve(__dirname, '..', 'package.json');
 const { name, version } = JSON.parse(readFileSync(pkgPath).toString())
 
 // display version and short-circuit exit
-if (/-v.*/.test(arg)) {    
-    console.log(`${name} v${version}`);
-    process.exit();
+if (/-v.*/.test(arg)) {
+  console.log(`${name} v${version} ✔️`);
+  process.exit();
 }
 
 nodeMenu
@@ -22,23 +23,15 @@ nodeMenu
   })
 
   .addDelimiter('~ ', 20)
-  .addItem(
-    'Launch Whatsapp Auto-Reply',
-    waar.launchWaar,
-  )
+  .addItem('START Whatsapp Auto-Reply', startMonitorUnreadMessages)
+  .addItem('STOP Whatsapp Auto-Reply', stopMonitorUnreadMessages)
 
   .addDelimiter(' ', 1)
-  .addItem('Print current params', waar.printParams)
+  .addItem('Print current params', printEnvs)
 
   .addDelimiter(' ', 1)
-  .addItem(
-    'Change default Auto-Reply message',
-    (message: string) => {
-      process.env.WAAR_DEFAULT_MESSAGE = message;
-    },
-    null,
-    [{ name: '\n\n   i.e. >> 3 "I can´t answer now. Call you later! :-)', type: 'string' }],
-  )
+  .addItem('Change default Auto-Reply message', (message: string) => { process.env.WAAR_DEFAULT_MESSAGE = message; }, null, [{ name: '<new_response>" | i.e. >> 3 "I can´t answer now. Call you later! :-)', type: 'string' }])
+  .addItem('Change per-chat reply interval', (minutes: number) => { process.env.WAAR_CHAT_REPLY_INTERVAL_MINUTES = minutes.toString(); }, null, [{ name: '<minutes>" | i.e. >> "5 90', type: 'numeric' }])
 
   .addDelimiter(' ', 1)
   .addDelimiter('~ ', 20)
