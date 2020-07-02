@@ -14,3 +14,7 @@
 - `yarn (install dependencies once)`
 
 - `yarn start` OR `npm (run) start`
+
+---
+
+<img src=".github/menu_demo.png" />
