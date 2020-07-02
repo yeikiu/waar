@@ -1,6 +1,6 @@
 import { Browser, Page } from "puppeteer";
 import debugHelper from '../util/debug_helper';
-import doQRlogin from "./browser_handler";
+import doQRlogin from "./do_qr_login";
 
 const { print } = debugHelper(__filename);
 

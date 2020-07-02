@@ -16,7 +16,7 @@ let isRunning = false;
 let browser: Browser = null;
 let page: Page = null;
 
-const monitorUnreadMessages = async (): Promise<void> => {
+const monitorChatCells = async (): Promise<void> => {
   if (isRunning) return;
   isRunning = true;
 
@@ -87,6 +87,6 @@ const monitorUnreadMessages = async (): Promise<void> => {
   isRunning = false;
 };
 
-const { start: startMonitorUnreadMessages, stop: stopMonitorUnreadMessages } = schedule('*/10 * * * * *', monitorUnreadMessages, { scheduled: false })
+const { start: startMonitorUnreadMessages, stop: stopMonitorUnreadMessages } = schedule('*/10 * * * * *', monitorChatCells, { scheduled: false })
 
-export { startMonitorUnreadMessages, stopMonitorUnreadMessages, monitorUnreadMessages }
+export default { startMonitorUnreadMessages, stopMonitorUnreadMessages }
