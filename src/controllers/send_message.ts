@@ -10,7 +10,8 @@ const sendMessage = async (page: Page, name: string, text: string): Promise<bool
     await page.click(userSelector);
     await page.waitFor('#main > footer div.selectable-text[contenteditable]');
 
-    if (process.env.NODE_ENV !== 'production') {
+    const { NODE_ENV = 'production' } = process.env
+    if (NODE_ENV !== 'production') {
       print(`TEST: Would have sent to ${name} at ${moment().format('HH:mm')} ✔️`);
       print({ text });
       return true;
