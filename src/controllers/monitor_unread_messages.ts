@@ -82,7 +82,9 @@ const monitorChatCells = async (): Promise<void> => {
 
   } catch ({ code, message }) {
     logError(`monitorUnreadMessages error: ${message} ❌`);
-    await browser.close();
+    if (browser) {
+      try { await browser.close(); } catch(e) { browser = null }
+    }
     // Launch Chrome
     browser = await launchBrowser();
     page = await loadWhatsappWeb(browser);
