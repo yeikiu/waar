@@ -38,11 +38,11 @@ const monitorChatCells = async (): Promise<void> => {
     const userChats = (await Promise.all((await page.$$('span[data-testid="default-user"]')) // use default-user for groups
       .map((el) => {
         return el.evaluate(el => {
-          const chatCell = el.parentElement.parentElement.parentElement.parentElement
+          const chatCell = el.parentElement?.parentElement?.parentElement?.parentElement || null
           return {
-            text: chatCell.textContent,
-            numUnread: Number(chatCell.lastChild.lastChild.lastChild.textContent || 0),
-            userName: chatCell.lastElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.getAttribute('title') || ''
+            text: chatCell?.textContent,
+            numUnread: Number(chatCell?.lastChild?.lastChild?.lastChild?.textContent || 0),
+            userName: chatCell?.lastElementChild?.firstElementChild?.firstElementChild?.firstElementChild?.firstElementChild?.getAttribute('title') || ''
           }
         })
       })))
@@ -82,6 +82,14 @@ const monitorChatCells = async (): Promise<void> => {
 
   } catch ({ code, message }) {
     logError(`monitorUnreadMessages error: ${message} ❌`);
+    await browser.close();
+    // Launch Chrome
+    browser = await launchBrowser();
+    page = await loadWhatsappWeb(browser);
+
+    // Launch Chat Monitor
+    print(`WhatsApp Web Auto-Reply re-started ${moment().format('HH:mm DD/MM/YYYY')} ✔️`);
+
   }
 
   isRunning = false;
