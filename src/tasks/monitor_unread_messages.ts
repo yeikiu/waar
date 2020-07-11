@@ -3,11 +3,11 @@
 import * as moment from 'moment';
 import { Page, Browser } from 'puppeteer';
 import debugHelper from '../util/debug_helper';
-import sendMessage from './send_message';
-import generateMessage from './generate_message';
+import sendMessage from '../controllers/send_message';
+import generateMessage from '../controllers/generate_message';
 import { schedule } from 'node-cron'
-import launchBrowser from './launch_browser';
-import loadWhatsappWeb from './load_whatsapp_web';
+import launchBrowser from '../controllers/launch_browser';
+import loadWhatsappWeb from '../controllers/load_whatsapp_web';
 
 const { logError, print } = debugHelper(__filename);
 

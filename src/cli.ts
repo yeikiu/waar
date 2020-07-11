@@ -4,7 +4,7 @@ import * as nodeMenu from 'node-menu';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import printEnvs from './controllers/print_envs';
-import monitorUnreadMessages from './controllers/monitor_unread_messages';
+import monitorUnreadMessages from './tasks/monitor_unread_messages';
 
 const { startMonitorUnreadMessages, stopMonitorUnreadMessages } = monitorUnreadMessages
 
