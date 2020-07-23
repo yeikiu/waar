@@ -91,7 +91,6 @@ const monitorChatCells = async (): Promise<void> => {
 
     // Launch Chat Monitor
     print(`WhatsApp Web Auto-Reply re-started ${moment().format('HH:mm DD/MM/YYYY')} ✔️`);
-
   }
 
   isRunning = false;

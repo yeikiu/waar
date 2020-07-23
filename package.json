@@ -1,6 +1,6 @@
 {
   "name": "waar",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "main": "dist/cli.js",
   "bin": {
     "waar": "./dist/cli.js"
@@ -40,10 +40,13 @@
     "ts-node": "^8.6.2",
     "typescript": "^3.3.3333"
   },
+  "resolutions": {
+    "lodash": "^4.17.19"
+  },
   "scripts": {
     "build": "rimraf dist && tsc -p .",
     "lint": "tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
-    "start": "yarn build && node -r dotenv/config dist/cli.js",
+    "start": "yarn build && node dist/cli.js",
     "watch": "nodemon"
   }
 }

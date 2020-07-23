@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// load .env file
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import * as nodeMenu from 'node-menu';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
