@@ -1,6 +1,6 @@
 {
   "name": "waar",
-  "version": "1.1.12",
+  "version": "1.1.13",
   "main": "dist/cli.js",
   "bin": {
     "waar": "./dist/cli.js"
@@ -41,7 +41,8 @@
     "typescript": "^3.3.3333"
   },
   "resolutions": {
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.19",
+    "dot-prop": "^5.1.1"
   },
   "scripts": {
     "build": "rimraf dist && tsc -p .",
