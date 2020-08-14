@@ -9,9 +9,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-
       - uses: actions/setup-node@v1
-      
       - run: |
           rm -rf .ci_badges
           yarn add setup-gh-badges
@@ -20,11 +18,9 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .ci_badges
           git commit -m "[CI:deploy] sync_badges job"
-
       - uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: actions/upload-artifact@v2
         with:
           name: badges_artifact
@@ -36,11 +32,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: master
-
       - uses: actions/setup-node@v1
         with:
           registry-url: https://registry.npmjs.org/
-
       - run: |
           yarn
           yarn build
