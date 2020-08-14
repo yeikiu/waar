@@ -5,7 +5,15 @@
 - Run headless: No browser UI window displayed. (You can change this later with `WAAR_HEADLESS` env variable) 
 - Keep session stored for next uses: Scan QR directly from terminal and only once
 
-## Run directly from the npm repo
+## Usage
+
+- `yarn global add waar`
+- `waar` 
+
+---
+<img src=".github/menu_demo.png" />
+
+## Try it directly from the npm repo
 
 - `npx waar`
 
@@ -18,7 +26,3 @@
 - `yarn (install dependencies once)`
 
 - `yarn watch`
-
----
-
-<img src=".github/menu_demo.png" />
