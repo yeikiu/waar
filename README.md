@@ -9,8 +9,7 @@
 
 - `npx waar`
 
-
-## 📝 Installation & Usage
+## 📝 Development
 
 - `git clone https://github.com/yeikiu/waar`
 
@@ -18,7 +17,7 @@
 
 - `yarn (install dependencies once)`
 
-- `yarn start` OR `npm (run) start`
+- `yarn watch`
 
 ---
 
