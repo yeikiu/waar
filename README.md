@@ -2,8 +2,13 @@
 
 # 🤖💬 waar | WhatsApp Auto-Reply node cli
 
-- Run headless (No browser UI window displayed. You can change this laster with `WAAR_HEADLESS` env variable) 
-- Keep session stored for next uses (scan QR directly from terminal and only once)
+- Run headless: No browser UI window displayed. (You can change this later with `WAAR_HEADLESS` env variable) 
+- Keep session stored for next uses: Scan QR directly from terminal and only once
+
+## Run directly from the npm repo
+
+- `npx waar`
+
 
 ## 📝 Installation & Usage
 

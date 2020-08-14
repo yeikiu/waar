@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-// load .env file
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -10,18 +9,16 @@ import { readFileSync } from 'fs';
 import printEnvs from './controllers/print_envs';
 import monitorUnreadMessages from './tasks/monitor_unread_messages';
 
-const { startMonitorUnreadMessages, stopMonitorUnreadMessages } = monitorUnreadMessages
+const [,arg1, arg2] = process.argv
+const argsStr = [arg1, arg2].join(' ')
+const { name, version } = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json')).toString())
 
-const [, , arg] = process.argv;
-
-const pkgPath = resolve(__dirname, '..', 'package.json');
-const { name, version } = JSON.parse(readFileSync(pkgPath).toString())
-
-// display version and short-circuit exit
-if (/-v.*/.test(arg)) {
-  console.log(`${name} v${version} ✔️`);
-  process.exit();
+if (/\s-v$)/.test(argsStr)) {  
+  console.log(`    ${name} v${version} ✔️`)
+  process.exit()
 }
+
+const { startMonitorUnreadMessages, stopMonitorUnreadMessages } = monitorUnreadMessages
 
 nodeMenu
   .customHeader(() => {
