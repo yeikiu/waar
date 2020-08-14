@@ -32,7 +32,6 @@ jobs:
 
   build_and_publish:
     runs-on: ubuntu-18.04
-    needs: sync_docs
     steps:
       - uses: actions/checkout@v2
         with:
