@@ -5,17 +5,18 @@
 - Run headless: No browser UI window displayed. (You can change this later with `WAAR_HEADLESS` env variable) 
 - Keep session stored for next uses: Scan QR directly from terminal and only once
 
+## Try it directly from the npm repo
+
+- `npx waar`
+
 ## Usage
 
-- `yarn global add waar`
-- `waar` 
+- `npm i waar -g` (Persist it locally to avoid further Puppeteer downloads)
+- `npx waar`
 
 ---
 <img src=".github/menu_demo.png" />
 
-## Try it directly from the npm repo
-
-- `npx waar`
 
 ## 📝 Development
 
