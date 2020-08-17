@@ -2,3 +2,4 @@ node_modules
 dist
 .waarChromeProfile
 yarn.lock
+package-lock.json

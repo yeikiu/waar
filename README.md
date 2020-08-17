@@ -24,6 +24,6 @@
 
 - `cd waar`
 
-- `yarn (install dependencies once)`
+- `npm i` (install dependencies once)
 
-- `yarn watch`
+- `npm run watch`
