@@ -4,16 +4,18 @@ import * as puppeteer from 'puppeteer'
 import debugHelper from '../util/debug_helper';
 
 const { print } = debugHelper(__filename);
-
 const {
-    WAAR_CHROME_DATA_DIR = '.waarChromeProfile',
-    WAAR_HEADLESS = 'true'
+    WAAR_CHROME_DATA_DIR = '.waarChromeProfile'
 } = process.env;
 
 const launchBrowser = (chromeProfileName = 'Default'): Promise<Browser> => {
     print('Launching browser ⏳');
     // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
 
+    
+    const {
+        WAAR_HEADLESS = 'true'
+    } = process.env;
     const headless = String(WAAR_HEADLESS) === 'true';
     return puppeteer.launch({
         ignoreDefaultArgs: true, // Do not use puppeteer.defaultArgs() for launching Chromium. Recommended to run Official Chrome with 'executablePath' 
