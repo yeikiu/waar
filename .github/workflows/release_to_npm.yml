@@ -12,8 +12,7 @@ jobs:
       - uses: actions/setup-node@v1
       - run: |
           rm -rf .ci_badges
-          yarn add setup-gh-badges
-          npx sync-badges
+          npx setup-gh-badges
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .ci_badges
@@ -36,8 +35,8 @@ jobs:
         with:
           registry-url: https://registry.npmjs.org/
       - run: |
-          yarn
-          yarn build
+          npm i
+          npm run build
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

@@ -10,13 +10,15 @@ import * as nodeMenu from 'node-menu'
 import { readFileSync } from 'fs'
 import printEnvs from './controllers/print_envs'
 import monitorUnreadMessages from './tasks/monitor_unread_messages'
+import debugHelper from './util/debug_helper';
 
+const { print } = debugHelper(__filename);
 const [,arg1, arg2] = process.argv
 const argsStr = [arg1, arg2].join(' ')
 const { name, version } = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json')).toString())
 
 if (/\s-v\s*$/.test(argsStr)) {  
-  console.log(`    ${name} v${version} ✔️`)
+  print(`    ${name} v${version} ✔️`)
   process.exit()
 }
 
@@ -28,7 +30,10 @@ nodeMenu
   })
 
   .addDelimiter('~ ', 20)
-  .addItem('START Whatsapp Auto-Reply', startMonitorUnreadMessages)
+  .addItem('START Whatsapp Auto-Reply', () => { 
+    print('Launching browser... 🕗', { headless: process.env.WAAR_HEADLESS })
+    startMonitorUnreadMessages() 
+  })
   .addItem('STOP Whatsapp Auto-Reply', stopMonitorUnreadMessages)
 
   .addDelimiter(' ', 1)
