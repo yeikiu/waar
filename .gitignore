@@ -3,3 +3,4 @@ dist
 .waarChromeProfile
 yarn.lock
 package-lock.json
+config/waar_globals.json
