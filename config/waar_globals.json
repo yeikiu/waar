@@ -1,0 +1,6 @@
+{
+  "WAAR_CHROME_DATA_DIR": ".waarChromeProfile",
+  "WAAR_HEADLESS": true,
+  "WAAR_DEFAULT_MESSAGE": "En estos momentos no puedo responder al WhatsApp.\n\nTe escribo pronto! 🤓",
+  "WAAR_CHAT_REPLY_INTERVAL_MINUTES": 90
+}

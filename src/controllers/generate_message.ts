@@ -1,11 +1,12 @@
-import { resolve } from "path";
-import { readFileSync } from "fs";
+import { resolve } from "path"
+import loadJSONObj from "../util/load_json_object"
 
-const pkgPath = resolve(__dirname, '..', '..', 'package.json');
-const { version } = JSON.parse(readFileSync(pkgPath).toString())
+const pkgPath = resolve(__dirname, '..', '..', 'package.json')
+const { version } = loadJSONObj(pkgPath)
+const waarConfigPath = resolve(__dirname, '..', '..', 'config', 'waar_globals.json')
 
 const generateMessage = (): string => {
-    const { WAAR_DEFAULT_MESSAGE = `I can´t answer now. Call you later! :-)` } = process.env;
+    const { WAAR_DEFAULT_MESSAGE } = loadJSONObj(waarConfigPath)
 
     return `🤖💬 *Whatsapp AUTO-REPLY* v${version}
                     
