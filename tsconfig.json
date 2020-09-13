@@ -1,17 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES5",
     "lib": [
-      "es2015",
-      "dom"
+      "ESNext",
+      "DOM"
     ],
     "outDir": "dist"
   },
   "include": [
     "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "tsconfig.json"
   ]
 }
