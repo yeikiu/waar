@@ -1,5 +1,5 @@
-import { resolve } from "path"
-import loadJSONObj from "../util/load_json_object"
+import { resolve } from 'path'
+import loadJSONObj from '../util/load_json_object'
 
 const pkgPath = resolve(__dirname, '..', '..', 'package.json')
 const { version } = loadJSONObj(pkgPath)
@@ -12,7 +12,7 @@ const generateMessage = (): string => {
                     
   ${WAAR_DEFAULT_MESSAGE}
   
-  >> https://github.com/yeikiu/waar <<`;
-};
+  >> https://github.com/yeikiu/waar <<`
+}
 
-export default generateMessage;
+export default generateMessage

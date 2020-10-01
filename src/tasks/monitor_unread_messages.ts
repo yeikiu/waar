@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 
-import * as moment from 'moment'
+import moment from 'moment'
 import { Page, Browser } from 'puppeteer'
 import debugHelper from '../util/debug_helper'
 import sendMessage from '../controllers/send_message'

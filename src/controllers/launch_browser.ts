@@ -1,17 +1,17 @@
-import { Browser } from "puppeteer";
-import { resolve } from "path";
-import * as puppeteer from 'puppeteer'
-import debugHelper from '../util/debug_helper';
-import loadJSONObj from "../util/load_json_object";
+import { Browser } from 'puppeteer'
+import { resolve } from 'path'
+import puppeteer from 'puppeteer'
+import debugHelper from '../util/debug_helper'
+import loadJSONObj from '../util/load_json_object'
 
-const { print } = debugHelper(__filename);
+const { print } = debugHelper(__filename)
 
 const waarConfigPath = resolve(__dirname, '..', '..', 'config', 'waar_globals.json')
 // Load config
 const { WAAR_CHROME_DATA_DIR } = loadJSONObj(waarConfigPath)
 
 const launchBrowser = (chromeProfileName = 'Default'): Promise<Browser> => {
-    print('Launching browser ⏳');
+    print('Launching browser ⏳')
     // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
     
     const {
@@ -27,7 +27,7 @@ const launchBrowser = (chromeProfileName = 'Default'): Promise<Browser> => {
             ...headless ? ['--headless=true'] : []
         ],
         headless
-    });
-};
+    })
+}
 
-export default launchBrowser;
+export default launchBrowser

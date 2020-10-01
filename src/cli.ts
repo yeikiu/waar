@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import * as dotenv from 'dotenv'
+import dotenv from 'dotenv'
 import { resolve } from 'path'
 dotenv.config({
   path: resolve(__dirname, '..', '.env')
 })
 
-import * as nodeMenu from 'node-menu'
+import nodeMenu from 'node-menu'
 import monitorUnreadMessages from './tasks/monitor_unread_messages'
 import debugHelper from './util/debug_helper';
 import loadJSONObj from './util/load_json_object'

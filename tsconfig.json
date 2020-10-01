@@ -5,7 +5,8 @@
       "ESNext",
       "DOM"
     ],
-    "outDir": "dist"
+    "outDir": "dist",
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*.ts"
