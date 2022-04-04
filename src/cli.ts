@@ -49,7 +49,7 @@ Object.assign(myRepl.commands, editedCoreMethods)
 // Custom commands
 myRepl.defineCommand('start', {
   help: `👉 START Whatsapp Auto-Reply
-`,
+---`,
 
   action: () => {
     print('Launching browser... 🕗', { headless: WAAR_HEADLESS })
@@ -61,7 +61,7 @@ myRepl.defineCommand('stop', {
   help: `👉 STOP Whatsapp Auto-Reply
 ---`,
   action: () => {
-    print('Stopping browser... 🕗', { headless: WAAR_HEADLESS });
+    print('Stopping browser... 🕗');
     stopMonitorUnreadMessages();
   }
 })
@@ -87,9 +87,9 @@ myRepl.defineCommand('interval', {
 })
 
 myRepl.defineCommand('toggle', {
-  help: `👉 'Toggle HEADLESS browser flag (Use before launching)
----`,
-  action: () => { WAAR_HEADLESS = !WAAR_HEADLESS;
+  help: '👉 Toggle HEADLESS browser flag (Use before launching)',
+  action: () => {
+    WAAR_HEADLESS = !WAAR_HEADLESS;
     writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_HEADLESS }, null, 2));
     if (WAAR_HEADLESS) {
       print(`Browser is in HEADLESS mode`);
