@@ -32,7 +32,19 @@ let {
 
 const { startMonitorUnreadMessages, stopMonitorUnreadMessages } = monitorUnreadMessages
 
-const myRepl = repl.start(`  >>> ${name} v${version} <<<\n\n`)
+const myRepl = repl.start(`  >>> ${name} v${version} <<<\n\n`);
+
+// Modify core methods (bit hacky, these are readonly)
+['save', 'load', 'editor', 'clear', 'break'].forEach(c => delete (myRepl.commands as any)[c])
+const coreMethods = Object.keys(myRepl.commands)
+const editedCoreMethods = coreMethods.reduce((p, c) => ({
+  ...p,
+  [c]: {
+    ...myRepl.commands[c],
+    help: `👉 ${myRepl.commands[c].help}\n---`
+  }
+}), {})
+Object.assign(myRepl.commands, editedCoreMethods)
 
 // Custom commands
 myRepl.defineCommand('start', {
@@ -48,7 +60,10 @@ myRepl.defineCommand('start', {
 myRepl.defineCommand('stop', {
   help: `👉 STOP Whatsapp Auto-Reply
 ---`,
-  action: stopMonitorUnreadMessages
+  action: () => {
+    print('Stopping browser... 🕗', { headless: WAAR_HEADLESS });
+    stopMonitorUnreadMessages();
+  }
 })
 
 myRepl.defineCommand('chmsg', {
@@ -57,6 +72,7 @@ myRepl.defineCommand('chmsg', {
   action: () => myRepl.question('Message: ', (message: string) => {
     WAAR_DEFAULT_MESSAGE = message;
     writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_DEFAULT_MESSAGE }, null, 2));
+    print(`New message set to: ${message}`);
   })
 })
 
@@ -66,6 +82,7 @@ myRepl.defineCommand('interval', {
   action: () => myRepl.question('Message: ', (minutes: string) => {
     WAAR_CHAT_REPLY_INTERVAL_MINUTES = minutes;
     writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_CHAT_REPLY_INTERVAL_MINUTES }, null, 2));
+    print(`Interval updated to: ${minutes} minutes`);
   })
 })
 
@@ -74,8 +91,13 @@ myRepl.defineCommand('toggle', {
 ---`,
   action: () => { WAAR_HEADLESS = !WAAR_HEADLESS;
     writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_HEADLESS }, null, 2));
+    if (WAAR_HEADLESS) {
+      print(`Browser is in HEADLESS mode`);
+    } else {
+      print(`Browser is in Window UI mode`);
+    }
   }
 })
 
 // Shell entrypoint
-myRepl.write('.help\n')
+myRepl.write('.help | Press enter to continue...')
