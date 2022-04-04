@@ -6,7 +6,7 @@ dotenv.config({
   path: resolve(__dirname, '..', '.env')
 })
 
-import nodeMenu from 'node-menu'
+import repl from 'repl'
 import monitorUnreadMessages from './tasks/monitor_unread_messages'
 import debugHelper from './util/debug_helper';
 import loadJSONObj from './util/load_json_object'
@@ -32,36 +32,50 @@ let {
 
 const { startMonitorUnreadMessages, stopMonitorUnreadMessages } = monitorUnreadMessages
 
-nodeMenu
-  .customHeader(() => {
-    process.stdout.write(`  >>> ${name} v${version} <<<\n\n`)
-  })
+const myRepl = repl.start(`  >>> ${name} v${version} <<<\n\n`)
 
-  .addDelimiter('~ ', 20)
-  .addItem('START Whatsapp Auto-Reply', () => { 
+// Custom commands
+myRepl.defineCommand('start', {
+  help: `👉 START Whatsapp Auto-Reply
+`,
+
+  action: () => {
     print('Launching browser... 🕗', { headless: WAAR_HEADLESS })
     startMonitorUnreadMessages() 
-  })
-  .addItem('STOP Whatsapp Auto-Reply', stopMonitorUnreadMessages)
+  }
+})
 
-  .addDelimiter(' ', 1)
-  .addItem('Print current params', () => print({
-    WAAR_HEADLESS,
-    WAAR_DEFAULT_MESSAGE,
-    WAAR_CHAT_REPLY_INTERVAL_MINUTES
-  }))
+myRepl.defineCommand('stop', {
+  help: `👉 STOP Whatsapp Auto-Reply
+---`,
+  action: stopMonitorUnreadMessages
+})
 
-  .addDelimiter(' ', 1)
-  .addItem('Change default Auto-Reply message', (message: string) => { WAAR_DEFAULT_MESSAGE = message; writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_DEFAULT_MESSAGE }, null, 2)) }, null, [{ name: `4 <new_response>" | i.e. >> 4 "I can't answer now. Call you later! :-)`, type: 'string' }])
-  .addItem('Change per-chat interval between replies', (minutes: number) => { WAAR_CHAT_REPLY_INTERVAL_MINUTES = minutes; writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_CHAT_REPLY_INTERVAL_MINUTES }, null, 2)) }, null, [{ name: '<minutes>" | i.e. >> "5 90', type: 'numeric' }])
-  .addItem('Toggle HEADLESS browser flag (Use before 1)', () => { WAAR_HEADLESS = !WAAR_HEADLESS; writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_HEADLESS }, null, 2)) })
+myRepl.defineCommand('chmsg', {
+  help: `👉 Change default Auto-Reply message
+---`,
+  action: () => myRepl.question('Message: ', (message: string) => {
+    WAAR_DEFAULT_MESSAGE = message;
+    writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_DEFAULT_MESSAGE }, null, 2));
+  })
+})
 
-  .addDelimiter(' ', 1)
-  .addDelimiter('~ ', 20)
-  .customPrompt(() => {
-    process.stdout.write('\nEnter your selection:\n')
+myRepl.defineCommand('interval', {
+  help: `👉 Change per-chat interval between replies
+---`,
+  action: () => myRepl.question('Message: ', (minutes: string) => {
+    WAAR_CHAT_REPLY_INTERVAL_MINUTES = minutes;
+    writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_CHAT_REPLY_INTERVAL_MINUTES }, null, 2));
   })
-  .continueCallback(() => {
-    // Runs between 'Press enter to continue' and the new menu render
-  })
-  .start()
+})
+
+myRepl.defineCommand('toggle', {
+  help: `👉 'Toggle HEADLESS browser flag (Use before launching)
+---`,
+  action: () => { WAAR_HEADLESS = !WAAR_HEADLESS;
+    writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_HEADLESS }, null, 2));
+  }
+})
+
+// Shell entrypoint
+myRepl.write('.help\n')
