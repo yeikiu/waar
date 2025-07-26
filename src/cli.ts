@@ -1,59 +1,73 @@
 #!/usr/bin/env node
 
-import dotenv from 'dotenv'
-import { resolve } from 'path'
+import dotenv from 'dotenv';
+import { resolve } from 'path';
 dotenv.config({
   path: resolve(__dirname, '..', '.env')
-})
+});
 
-import repl from 'repl'
-import monitorUnreadMessages from './tasks/monitor_unread_messages'
-import debugHelper from './util/debug_helper';
-import loadJSONObj from './util/load_json_object'
-import { writeFileSync } from 'fs'
+import repl from 'repl';
+
+import debugHelper from './util/debug_helper';;
+import loadJSONObj from './util/load_json_object';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { BrowserContext, FirefoxBrowser, Page } from 'playwright';
+import { launchFirefox } from './playwright_utils/launch_firefox';
+import { monitorUnreadMessages } from './tasks/monitor_unread_messages';
+import { loadWhatsappWeb } from './controllers/load_whatsapp_web';
 
 const { print } = debugHelper(__filename);
-const [,arg1, arg2] = process.argv
-const argsStr = [arg1, arg2].join(' ')
-const { name, version } = loadJSONObj(resolve(__dirname, '..', 'package.json'))
+const [, arg1, arg2] = process.argv;
+const argsStr = [arg1, arg2].join(' ');
+const { name, version } = loadJSONObj(resolve(__dirname, '..', 'package.json'));
 
-if (/\s-v\s*$/.test(argsStr)) {  
-  print(`    ${name} v${version} ✔️`)
-  process.exit()
+if (/\s-v\s*$/.test(argsStr)) {
+  print(`    ${name} v${version} ✔️`);
+  process.exit();
 }
 
-const waarConfigPath = resolve(__dirname, '..', 'config', 'waar_globals.json')
-const waarConfig = loadJSONObj(waarConfigPath)
+const waarConfigPath = resolve(__dirname, '..', 'config', 'waar_globals.json');
+const waarConfig = loadJSONObj(waarConfigPath);
 let {
-  WAAR_HEADLESS,
   WAAR_DEFAULT_MESSAGE,
-  WAAR_CHAT_REPLY_INTERVAL_MINUTES
-} = waarConfig
+  WAAR_CHAT_REPLY_INTERVAL_MINUTES,
+} = waarConfig;
 
-const { startMonitorUnreadMessages, stopMonitorUnreadMessages } = monitorUnreadMessages
+const { BROWSER_PROFILE = 'waar_user', HEADLESS = 'false' } = process.env;
+const browserUserDir = resolve(__dirname, '..', '.browser_profile', BROWSER_PROFILE)
+if (!existsSync(browserUserDir)) {
+  mkdirSync(browserUserDir, { recursive: true });
+}
+
+let browser: FirefoxBrowser | BrowserContext | null = null;
+let page: Page | null = null;
 
 const myRepl = repl.start(`  >>> ${name} v${version} <<<\n\n`);
 
 // Modify core methods (bit hacky, these are readonly)
-['save', 'load', 'editor', 'clear', 'break'].forEach(c => delete (myRepl.commands as any)[c])
-const coreMethods = Object.keys(myRepl.commands)
+['save', 'load', 'editor', 'clear', 'break'].forEach(c => delete (myRepl.commands as any)[c]);
+const coreMethods = Object.keys(myRepl.commands);
 const editedCoreMethods = coreMethods.reduce((p, c) => ({
   ...p,
   [c]: {
     ...myRepl.commands[c],
     help: `👉 ${myRepl.commands[c].help}\n---`
   }
-}), {})
-Object.assign(myRepl.commands, editedCoreMethods)
+}), {});
+Object.assign(myRepl.commands, editedCoreMethods);
 
 // Custom commands
 myRepl.defineCommand('start', {
   help: `👉 START Whatsapp Auto-Reply
 ---`,
 
-  action: () => {
-    print('Launching browser... 🕗', { headless: WAAR_HEADLESS })
-    startMonitorUnreadMessages() 
+  action: async () => {
+    print('Launching browser... 🕗', { HEADLESS });
+    const { page: ffPage, browser: ffBrowser } = await launchFirefox({ headless: HEADLESS !== 'false', browserUserDir });
+    browser = ffBrowser;
+    page = await loadWhatsappWeb(ffPage);
+
+    monitorUnreadMessages(page);
   }
 })
 
@@ -62,7 +76,7 @@ myRepl.defineCommand('stop', {
 ---`,
   action: () => {
     print('Stopping browser... 🕗');
-    stopMonitorUnreadMessages();
+    //stopMonitorUnreadMessages();
   }
 })
 
@@ -86,7 +100,7 @@ myRepl.defineCommand('interval', {
   })
 })
 
-myRepl.defineCommand('toggle', {
+/* myRepl.defineCommand('toggle', {
   help: '👉 Toggle HEADLESS browser flag (Use before launching)',
   action: () => {
     WAAR_HEADLESS = !WAAR_HEADLESS;
@@ -97,7 +111,7 @@ myRepl.defineCommand('toggle', {
       print(`Browser is in Window UI mode`);
     }
   }
-})
+}) */
 
 // Shell entrypoint
-myRepl.write('.help | Press enter to continue...')
+myRepl.write('.help | Press enter to continue...');

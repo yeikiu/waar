@@ -1,4 +1,4 @@
 node_modules
 dist
-.waarChromeProfile
+.browser_profile
 config/waar_globals.json

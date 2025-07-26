@@ -6,11 +6,12 @@ import { join } from 'path'
 const tempOSDirectoryPath = realpathSync(tmpdir())
 const tempProfilePath = join(tempOSDirectoryPath, 'FF_PLAYWRIGTH_USER')
 
-export const launchFirefox = async ({ headless = true, browserUserDir = tempProfilePath } = {}): Promise<{ browser: FirefoxBrowser, page: Page }> => {
-    const browser: FirefoxBrowser = (await firefox.launchPersistentContext(browserUserDir, {
+export const launchFirefox = async ({ headless = true, browserUserDir = tempProfilePath } = {}): Promise<{ browser: FirefoxBrowser | BrowserContext, page: Page }> => {
+    const browser = browserUserDir ? await firefox.launchPersistentContext(browserUserDir, {
         headless,
-    })).browser();
-
+    }) : await firefox.launch({
+        headless
+    })
     const page = await browser.newPage({
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36'
     })
