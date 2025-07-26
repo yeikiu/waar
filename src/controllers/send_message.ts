@@ -1,14 +1,14 @@
-import { Page } from 'puppeteer'
 import moment from 'moment'
 import debugHelper from '../util/debug_helper'
+import { Page } from 'playwright'
 const { logError, print } = debugHelper(__filename)
 
 const sendMessage = async (page: Page, name: string, text: string): Promise<boolean> => {
   try {
     const userSelector = `span[title="${name}"]`
-    await page.waitFor(userSelector)
+    /* await page.waitFor(userSelector)
     await page.click(userSelector)
-    await page.waitFor('#main > footer div.selectable-text[contenteditable]')
+    await page.waitFor('#main > footer div.selectable-text[contenteditable]') */
 
     const { NODE_ENV = 'production' } = process.env
     if (NODE_ENV !== 'production') {
@@ -33,7 +33,7 @@ const sendMessage = async (page: Page, name: string, text: string): Promise<bool
       await page.keyboard.up('Shift')
     }
 
-    await page.waitFor(1000)
+    /* await page.waitFor(1000) */
     await page.keyboard.press('Enter')
     print(`Sent to ${name} at ${moment().format('HH:mm')} ✔️`)
     return true

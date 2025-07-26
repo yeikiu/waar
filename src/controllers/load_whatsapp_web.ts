@@ -1,15 +1,15 @@
-import { Browser, Page } from 'puppeteer'
+import { Browser, Page } from 'playwright';
 import debugHelper from '../util/debug_helper'
 import doQRlogin from './do_qr_login'
 
 const { print } = debugHelper(__filename)
 
-const loadWhatsappWeb = async (browser: Browser): Promise<Page> => {
+const loadWhatsappWeb = async (browser: Browser, page: Page): Promise<Page> => {
     print('Loading Whatsapp-Web ⏳')
-    const page = (await browser.pages())[0]
-    page.setViewport({ width: 1024, height: 768 })
+    
+    // page.setViewport({ width: 1024, height: 768 })
     await page.goto('https://web.whatsapp.com/', {
-      waitUntil: 'networkidle2',
+     // waitUntil: 'networkidle2',
       timeout: 0,
     });
 
