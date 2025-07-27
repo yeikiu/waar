@@ -1,4 +1,4 @@
-import qrcode = require('qrcode-terminal');
+import * as qrcode from 'qrcode-terminal';
 import { debugHelper } from '../util/debug_helper';
 import { Page } from 'playwright';
 
