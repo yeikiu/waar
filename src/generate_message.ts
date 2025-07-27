@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { loadJsonData } from '../util/json_helper';
+import { loadJsonData } from './util/json_helper';
 
 const pkgPath = resolve(__dirname, '..', '..', 'package.json');
 const { version } = loadJsonData(pkgPath, { version: '' });

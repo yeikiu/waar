@@ -1,15 +1,15 @@
 /* eslint-disable no-await-in-loop */
 
 import moment from 'moment'
-import debugHelper from '../util/debug_helper'
+import { debugHelper } from '../util/debug_helper'
 
 import { Page } from 'playwright'
-import { generateMessage } from './generate_message'
+import { generateMessage } from '../generate_message'
 import { resolve } from 'path'
 import { existsSync, mkdirSync } from 'fs'
 import { loadJsonData, saveJsonData } from '../util/json_helper'
 
-const { logError, print } = debugHelper(__filename)
+const { logError, print, debug } = debugHelper(__filename);
 
 const dataCacheDir = resolve(__dirname, '..', '..', '.data');
 const dataCacheFile = resolve(dataCacheDir, 'data_cache.json');
@@ -30,7 +30,7 @@ export const monitorUnreadMessages = async (page: Page, replyMessage: string): P
 
     const dataCacheObj = loadJsonData(dataCacheFile, {});
 
-    print('Loading unread chats... ⏳');
+    debug('Loading unread chats... ⏳');
     const chatListDiv = page.getByLabel("Chat list");
     // const rowCount = await chatListDiv.getAttribute('aria-rowcount');
 
@@ -45,13 +45,13 @@ export const monitorUnreadMessages = async (page: Page, replyMessage: string): P
     const [firstMenuOption] = (await contextualMenu.innerText()).split('\n');
     const isGroup = firstMenuOption === 'Group info';
 
-    console.log({ firstMenuOption, isGroup });
+    debug({ firstMenuOption, isGroup });
     if (isGroup) throw new Error('Skip reply to group chat');
 
     let targetCachedData = new Date(dataCacheObj[targetName]).getTime();
     if (targetCachedData) {
       const minsSinceCached = moment().diff(moment(targetCachedData), 'minutes');
-      console.log({ targetName, minsSinceCached });
+      debug({ targetName, minsSinceCached });
       if (minsSinceCached < minMinutesBeforeNewReply) {
         throw new Error(`Skip reply to ${targetName}, last was ${minsSinceCached} minutes ago`);
       }
@@ -78,10 +78,10 @@ export const monitorUnreadMessages = async (page: Page, replyMessage: string): P
     // await page.keyboard.press('Enter')
     print(`Sent to ${targetName} at ${moment().format('DD-MM-YYYY HH:mm')} ✔️`);
 
-  } catch (err) {
+  } catch (error) {
     // Don't log controlled errors
-    if (!['Skip reply', `getByLabel('Chat list')`].some(str => String(err).includes(str))) {
-      logError(`${err} ❌`);
+    if (!['Skip reply', `getByLabel('Chat list')`].some(str => String(error).includes(str))) {
+      logError(`${error} ❌`);
     }
   }
 

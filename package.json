@@ -1,9 +1,9 @@
 {
   "name": "waar",
   "version": "2.0.0",
-  "main": "dist/cli.js",
-  "bin": "dist/cli.js",
-  "description": "🤖💬 WhatsApp Auto-Reply node cli",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
+  "description": "🤖💬 WhatsApp Auto-Reply",
   "author": "@yeikiu",
   "bugs": {
     "url": "https://github.com/yeikiu/waar/issues"

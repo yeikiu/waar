@@ -1,5 +1,5 @@
 import { Page } from 'playwright';
-import debugHelper from '../util/debug_helper'
+import { debugHelper } from '../util/debug_helper'
 import { doQRlogin } from './do_qr_login'
 
 const { print } = debugHelper(__filename)

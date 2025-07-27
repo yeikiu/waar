@@ -1,5 +1,5 @@
 import qrcode = require('qrcode-terminal');
-import debugHelper from '../util/debug_helper';
+import { debugHelper } from '../util/debug_helper';
 import { Page } from 'playwright';
 
 const { debug, print } = debugHelper(__filename);
