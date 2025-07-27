@@ -9,23 +9,15 @@
 
 <img src=".github/waar_demo_2.png" />
 
-## Try it directly from the npm repo
-
-- `npx waar`
-
 
 ## Usage
 
-- `npm i waar -g` (Persist the package globally to avoid further Playwright downloads)
-- `npx waar`
+- `git clone https://github.com/yeikiu/waar`
+- `cd waar`
+- `npm i` (install dependencies once)
+- `npm run start`
 
 
 ## 📝 Development
-
-- `git clone https://github.com/yeikiu/waar`
-
-- `cd waar`
-
-- `npm i` (install dependencies once)
 
 - `npm run watch`
