@@ -10,11 +10,17 @@
 <img src=".github/waar_demo_2.png" />
 
 
-## Usage
+## 💻 Shell Installation
+
+> **Requires Git, NodeJS and npm** installed in your system
 
 - `git clone https://github.com/yeikiu/waar`
 - `cd waar`
 - `npm i` (install dependencies once)
+
+
+## ✨ Usage
+
 - `npm run start`
 
 
