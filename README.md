@@ -1,29 +1,29 @@
 <img src=".ci_badges/npm-version-badge.svg" /> <img src=".ci_badges/npm-dependencies-badge.svg" /> <img src=".ci_badges/npm-devdependencies-badge.svg" />
 
-# 🤖💬 waar | WhatsApp Auto-Reply node cli
+# 🤖💬 waar | WhatsApp Auto-Reply
 
-- Run headless: No browser UI window displayed. (You can change this later with `WAAR_HEADLESS` env variable) 
-- Keep session stored for next uses: Scan QR directly from terminal and only once
+- Runs headless: No browser UI window displayed. (You can change this later with `HEADLESS` env variable) 
+- Keeps session stored for next uses: Scan QR directly from terminal and only once
 
-## Try it directly from the npm repo
+<img src=".github/waar_demo_1.png" />
 
-- `npx waar`
+<img src=".github/waar_demo_2.png" />
 
-## Usage
 
-- `npm i waar -g` (Persist it locally to avoid further Puppeteer downloads)
-- `npx waar`
+## 💻 Shell Installation
 
----
-<img src=".github/menu_demo.png" />
+> **Requires Git, NodeJS and npm** installed in your system
+
+- `git clone https://github.com/yeikiu/waar`
+- `cd waar`
+- `npm i` (install dependencies once)
+
+
+## ✨ Usage
+
+- `npm run start`
 
 
 ## 📝 Development
-
-- `git clone https://github.com/yeikiu/waar`
-
-- `cd waar`
-
-- `npm i` (install dependencies once)
 
 - `npm run watch`
