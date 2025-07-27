@@ -2,8 +2,8 @@
 
 # 🤖💬 waar | WhatsApp Auto-Reply node cli
 
-- Run headless: No browser UI window displayed. (You can change this later with `WAAR_HEADLESS` env variable) 
-- Keep session stored for next uses: Scan QR directly from terminal and only once
+- Runs headless: No browser UI window displayed. (You can change this later with `WAAR_HEADLESS` env variable) 
+- Keeps session stored for next uses: Scan QR directly from terminal and only once
 
 ## Try it directly from the npm repo
 
@@ -11,7 +11,7 @@
 
 ## Usage
 
-- `npm i waar -g` (Persist it locally to avoid further Puppeteer downloads)
+- `npm i waar -g` (Persist the package globally to avoid further Playwright downloads)
 - `npx waar`
 
 ---

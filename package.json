@@ -50,6 +50,7 @@
     "rules": {}
   },
   "scripts": {
+    "postinstall": "npx playwright install firefox",
     "build": "rimraf dist && tsc -p .",
     "lint": "tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
     "start": "npm run build && node dist/cli.js",
