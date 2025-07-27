@@ -26,15 +26,15 @@ if (/\s-v\s*$/.test(argsStr)) {
   process.exit();
 }
 
-const waarConfigPath = resolve(__dirname, '..', 'config', 'waar_globals.json');
-const waarConfig = loadJSONObj(waarConfigPath);
-let {
-  WAAR_DEFAULT_MESSAGE,
-  WAAR_CHAT_REPLY_INTERVAL_MINUTES,
-} = waarConfig;
+const {
+  BROWSER_PROFILE = 'waar_user', HEADLESS = 'false',
+  WAAR_DEFAULT_MESSAGE, WAAR_CHAT_REPLY_INTERVAL_MINUTES
+} = process.env;
+let defaultMessage = WAAR_DEFAULT_MESSAGE;
+let replyInterval = Number(WAAR_CHAT_REPLY_INTERVAL_MINUTES);
 
-const { BROWSER_PROFILE = 'waar_user', HEADLESS = 'false' } = process.env;
-const browserUserDir = resolve(__dirname, '..', '.browser_profile', BROWSER_PROFILE)
+
+const browserUserDir = resolve(__dirname, '..', '.browser_profile', BROWSER_PROFILE);
 if (!existsSync(browserUserDir)) {
   mkdirSync(browserUserDir, { recursive: true });
 }
@@ -67,7 +67,7 @@ myRepl.defineCommand('start', {
     browser = ffBrowser;
     page = await loadWhatsappWeb(ffPage);
 
-    monitorUnreadMessages(page);
+    monitorUnreadMessages(page, defaultMessage, replyInterval);
   }
 })
 
@@ -84,8 +84,7 @@ myRepl.defineCommand('chmsg', {
   help: `👉 Change default Auto-Reply message
 ---`,
   action: () => myRepl.question('Message: ', (message: string) => {
-    WAAR_DEFAULT_MESSAGE = message;
-    writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_DEFAULT_MESSAGE }, null, 2));
+    defaultMessage = message;
     print(`New message set to: ${message}`);
   })
 })
@@ -94,8 +93,7 @@ myRepl.defineCommand('interval', {
   help: `👉 Change per-chat interval between replies
 ---`,
   action: () => myRepl.question('Message: ', (minutes: string) => {
-    WAAR_CHAT_REPLY_INTERVAL_MINUTES = minutes;
-    writeFileSync(waarConfigPath, JSON.stringify({ ...waarConfig, WAAR_CHAT_REPLY_INTERVAL_MINUTES }, null, 2));
+    replyInterval = Number(minutes);
     print(`Interval updated to: ${minutes} minutes`);
   })
 })

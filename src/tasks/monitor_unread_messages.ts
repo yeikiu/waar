@@ -2,28 +2,51 @@
 
 import moment from 'moment'
 import debugHelper from '../util/debug_helper'
-import sendMessage from '../controllers/send_message'
-import generateMessage from '../controllers/generate_message'
-import { resolve } from 'path'
-import loadJSONObj from '../util/load_json_object'
 
 import { Page } from 'playwright'
+import { generateMessage } from '../controllers/generate_message'
 
 const { logError, print, debug } = debugHelper(__filename)
 
-const waarConfigPath = resolve(__dirname, '..', '..', 'config', 'waar_globals.json')
 const sentCache = {}
 let isRunning = false
 
-export const monitorUnreadMessages = async (page: Page): Promise<void> => {
+export const monitorUnreadMessages = async (page: Page, replyMessage: string, replyInterval: number): Promise<void> => {
   if (isRunning) return
   isRunning = true
 
-  // Load config
-  const { WAAR_CHAT_REPLY_INTERVAL_MINUTES } = loadJSONObj(waarConfigPath);
   try {
+    await page.getByRole('tab', { name: 'Unread' }).click();
+    await page.waitForLoadState('domcontentloaded');
+
     const chatListDiv = await page.getByLabel("Chat list");
-    debug({ chatListDiv: await chatListDiv.allInnerTexts() });
+    const rowCount = await chatListDiv.getAttribute('aria-rowcount');
+
+    const nextUnreadCellDiv = await chatListDiv.getByRole('listitem');
+    const [targetName] = (await nextUnreadCellDiv.innerText()).split('\n');
+
+    await nextUnreadCellDiv.click();
+    await page.waitForLoadState('domcontentloaded');
+
+    await page.getByLabel('Type a message').focus();
+
+    const parts = generateMessage(replyMessage)
+      .replace(/\\+n/g, '\n').split('\n')
+
+    for (let i = 0; i < parts.length; i += 1) {
+      await page.keyboard.type(parts[i], { delay: 25 });
+      if (i === parts.length - 1) break;
+      await page.keyboard.down('Shift')
+      await page.keyboard.press('Enter')
+      await page.keyboard.up('Shift')
+    }
+
+    // await page.keyboard.press('Enter')
+    print(`Sent to ${targetName} at ${moment().format('HH:mm')} ✔️`)
+    return;
+
+
+    debug({ nextUnreadCellDiv: await nextUnreadCellDiv.allInnerTexts(), rowCount });
 
     const userChats = [];
     const toReply = [];
@@ -32,7 +55,7 @@ export const monitorUnreadMessages = async (page: Page): Promise<void> => {
     for (const { userName } of userChats) {
       const minsDiff = moment().diff(sentCache[userName], 'minutes')
 
-      if (!sentCache[userName] || minsDiff >= WAAR_CHAT_REPLY_INTERVAL_MINUTES) {
+      if (!sentCache[userName] || minsDiff >= 5) {
         toReply.push(userName)
 
       } else {
@@ -47,7 +70,7 @@ export const monitorUnreadMessages = async (page: Page): Promise<void> => {
     }
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const userName of toReply) {
+    /* for (const userName of toReply) {
       const text = generateMessage()
       if (await sendMessage(page, userName, text)) {
         sentCache[userName] = moment()
@@ -55,7 +78,7 @@ export const monitorUnreadMessages = async (page: Page): Promise<void> => {
       } else {
         logError(`Failed messaging ${userName} ❌`)
       }
-    }
+    } */
 
   } catch ({ code, message }) {
     logError(`monitorUnreadMessages error: ${message} ❌`)
@@ -69,5 +92,5 @@ export const monitorUnreadMessages = async (page: Page): Promise<void> => {
   }
 
   isRunning = false;
-  //setInterval(() => monitorUnreadMessages(page), WAAR_CHAT_REPLY_INTERVAL_MINUTES * 60 * 1000);
+  //setInterval(() => monitorUnreadMessages(page), replyInterval * 60 * 1000);
 }
