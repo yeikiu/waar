@@ -75,7 +75,7 @@ export const monitorUnreadMessages = async (page: Page, replyMessage: string): P
     saveJsonData(dataCacheFile, { ...dataCacheObj, [targetName]: targetCachedData });
 
     // await page.waitForTimeout(7000); // Give link previews some time to load
-    // await page.keyboard.press('Enter')
+    await page.keyboard.press('Enter')
     print(`Sent to ${targetName} at ${moment().format('DD-MM-YYYY HH:mm')} ✔️`);
 
   } catch (error) {
