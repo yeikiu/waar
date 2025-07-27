@@ -2,7 +2,7 @@
 
 # 🤖💬 waar | WhatsApp Auto-Reply
 
-- Runs headless: No browser UI window displayed. (You can change this later with `WAAR_HEADLESS` env variable) 
+- Runs headless: No browser UI window displayed. (You can change this later with `HEADLESS` env variable) 
 - Keeps session stored for next uses: Scan QR directly from terminal and only once
 
 <img src=".github/waar_demo_1.png" />
