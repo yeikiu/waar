@@ -1,12 +1,14 @@
 import { BrowserContext, firefox, FirefoxBrowser, Page } from 'playwright'
-import {realpathSync } from'fs'
-import {tmpdir } from'os'
+import { realpathSync } from 'fs'
+import { tmpdir } from 'os'
 import { join } from 'path'
 
 const tempOSDirectoryPath = realpathSync(tmpdir())
 const tempProfilePath = join(tempOSDirectoryPath, 'FF_PLAYWRIGTH_USER')
 
 export const launchFirefox = async ({ headless = true, browserUserDir = tempProfilePath } = {}): Promise<{ browser: FirefoxBrowser | BrowserContext, page: Page }> => {
+    console.log('Launching browser... 🕗', { headless });
+
     const browser = browserUserDir ? await firefox.launchPersistentContext(browserUserDir, {
         headless,
     }) : await firefox.launch({

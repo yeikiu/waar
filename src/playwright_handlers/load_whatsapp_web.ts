@@ -25,7 +25,6 @@ export const loadWhatsappWeb = async (page: Page): Promise<Page> => {
   const paneSide = await page.$('#pane-side');
   if (paneSide !== null) {
     print('Already logged in! ✔️');
-    print('Loading chats... ⏳');
     return page;
   }
 

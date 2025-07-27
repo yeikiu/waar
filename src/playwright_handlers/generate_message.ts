@@ -1,8 +1,8 @@
 import { resolve } from 'path'
-import loadJSONObj from '../util/load_json_object'
+import { loadJsonData } from '../util/json_helper';
 
 const pkgPath = resolve(__dirname, '..', '..', 'package.json');
-const { version } = loadJSONObj(pkgPath);
+const { version } = loadJsonData(pkgPath, { version: '' });
 
 export const generateMessage = (content: string): string => `                  
 ${content}

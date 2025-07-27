@@ -16,6 +16,5 @@ export const doQRlogin = async (page: Page): Promise<Page> => {
 
   await page.waitForSelector('#pane-side', { timeout: 0 });
   print('Logged IN! ✔️');
-  print('Loading chats... ⏳');
   return page;
 };
