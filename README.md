@@ -5,6 +5,9 @@
 - Runs headless: No browser UI window displayed. (You can change this later with `WAAR_HEADLESS` env variable) 
 - Keeps session stored for next uses: Scan QR directly from terminal and only once
 
+<img src=".github/waar_demo_1.png" />
+
+<img src=".github/waar_demo_2.png" />
 
 ## Try it directly from the npm repo
 
