@@ -23,6 +23,22 @@
 
 - `npm run start`
 
+## 🔧 .env config
+
+```
+# Use `HEADLESS=false` if you want to see the browser window while running
+HEADLESS=true
+
+# The auto-reply message sent to contacts (groups are ignored by default)
+WAAR_DEFAULT_MESSAGE='En estos momentos no puedo responder WhatsApps. 🙏🏼\n\nTe escribo pronto! 🤓'
+
+# Time interval to check for new chats under the `Unread` tab
+MINUTES_BETWEEN_UNREAD_CHECKS=1
+
+# Time interval to skip auto-replies after last one ocurred for a contact (avoids spamming)
+MIN_MINUTES_BETWEEN_REPLIES=180
+```
+
 
 ## 📝 Development
 
