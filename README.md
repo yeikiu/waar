@@ -1,4 +1,8 @@
-<img src=".ci_badges/npm-version-badge.svg" /> <img src=".ci_badges/npm-dependencies-badge.svg" /> <img src=".ci_badges/npm-devdependencies-badge.svg" />
+<div style="display: flex; justify-content: space-between;">
+  <img src=".ci_badges/npm-version-badge.svg" />
+  <img src=".ci_badges/npm-dependencies-badge.svg" />
+  <img src=".ci_badges/npm-devdependencies-badge.svg" />
+</div>
 
 # 🤖💬 waar | WhatsApp Auto-Reply
 
