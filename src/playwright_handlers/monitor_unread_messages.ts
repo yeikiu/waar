@@ -34,7 +34,7 @@ export const monitorUnreadMessages = async (page: Page, replyMessage: string): P
     const chatListDiv = page.getByLabel("Chat list");
     // const rowCount = await chatListDiv.getAttribute('aria-rowcount');
 
-    const nextUnreadCellDiv = chatListDiv.getByRole('listitem').first();
+    const nextUnreadCellDiv = chatListDiv.getByRole('row').first();
     const [targetName] = (await nextUnreadCellDiv.innerText()).split('\n');
 
     await nextUnreadCellDiv.click();
@@ -58,7 +58,7 @@ export const monitorUnreadMessages = async (page: Page, replyMessage: string): P
     }
 
     await page.waitForSelector('#main');
-    await page.getByLabel('Type a message').focus();
+    await page.getByText('Type a message').focus();
 
     const parts = generateMessage(replyMessage)
       .replace(/\\+n/g, '\n').split('\n')
