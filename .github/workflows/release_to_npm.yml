@@ -1,0 +1,26 @@
+name: release_to_npm
+on:
+  release:
+    types:
+     - published
+
+jobs:
+
+  release_to_npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.16.0'
+          registry-url: https://registry.npmjs.org/
+
+      - run: |
+          npm i
+          npm run build
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
