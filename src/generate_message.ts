@@ -7,5 +7,5 @@ const { version } = loadJsonData(pkgPath, { version: '' });
 export const generateMessage = (content: string): string => `                  
 ${content}
   
-> Sent from 🤖 *Whatsapp AUTO-REPLY* beta-${version} | https://github.com/yeikiu/waar`
+> Via 🤖 *Whatsapp AUTO-REPLY* v-${version} | https://github.com/yeikiu/waar`
     .trim();

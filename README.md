@@ -9,6 +9,9 @@
 
 <img src=".github/waar_demo_2.png" />
 
+## ✨ Usage
+
+- `npx waar` (easiest way, no clone required)
 
 ## 💻 Shell Installation
 
@@ -18,10 +21,7 @@
 - `cd waar`
 - `npm i` (install dependencies once)
 
-
-## ✨ Usage
-
-- `npm run start`
+- `npm run start` / `npm run watch` (dev mode)
 
 ## 🔧 .env config
 
@@ -38,7 +38,6 @@ MINUTES_BETWEEN_UNREAD_CHECKS=1
 # Time interval to skip auto-replies after last one ocurred for a contact (avoids spamming)
 MIN_MINUTES_BETWEEN_REPLIES=180
 ```
-
 
 ## 📝 Development
 

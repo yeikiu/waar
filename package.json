@@ -1,6 +1,6 @@
 {
   "name": "waar",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "🤖💬 WhatsApp Auto-Reply",
   "author": "@yeikiu",
   "bugs": {
@@ -14,6 +14,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/yeikiu/waar.git"
+  },
+  "bin": {
+    "waar": "dist/index.js"
   },
   "dependencies": {
     "dotenv": "^17.2.1",
@@ -36,6 +39,7 @@
     "build": "rimraf dist && tsc -p .",
     "lint": "tsc -p . --noEmit && eslint \"src/**/*.{js,ts}\" --quiet --fix",
     "start": "npm run build && node dist/index.js",
-    "watch": "nodemon"
+    "watch": "nodemon",
+    "deploy": "npm run lint && npm run build && npm publish"
   }
 }
