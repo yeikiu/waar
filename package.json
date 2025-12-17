@@ -1,6 +1,6 @@
 {
   "name": "waar",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "🤖💬 WhatsApp Auto-Reply",
   "author": "@yeikiu",
   "bugs": {
@@ -19,6 +19,7 @@
     "waar": "dist/index.js"
   },
   "dependencies": {
+    "debug": "^4.4.3",
     "dotenv": "^17.2.1",
     "moment": "^2.30.1",
     "playwright": "^1.54.1",
