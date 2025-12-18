@@ -14,8 +14,9 @@ import { debugHelper } from './util/debug_helper';
 const { print, logError } = debugHelper(__filename);
 
 const {
-  BROWSER_PROFILE = 'waar_user', HEADLESS = 'false',
-  WAAR_DEFAULT_MESSAGE,
+  BROWSER_PROFILE = 'waar_user',
+  HEADLESS = 'false',
+  WAAR_DEFAULT_MESSAGE = 'I cannot respond to WhatsApps at the moment.\n\nI will write to you soon! 🙏🏼',
   MINUTES_BETWEEN_UNREAD_CHECKS = 1
 } = process.env;
 
