@@ -1,3 +1,21 @@
+> # ⚠️ UNMAINTAINED / DEPRECATED — do not use
+>
+> **This project is no longer maintained and its use is discouraged.**
+>
+> The repository is **archived** (read-only): issues and pull requests are closed,
+> no further releases will be published, and **security alerts are not being
+> monitored or acted upon**. Known vulnerabilities in its dependency tree — including
+> a high-severity advisory in `js-yaml` reachable through the committed
+> `package-lock.json` — will **not** be fixed.
+>
+> This applies to the published npm package as well: **do not run `npx waar`** and do
+> not add it as a dependency. If you already do, remove it.
+>
+> If you need the functionality, fork the code and audit/update the dependencies
+> yourself — you take on full responsibility for doing so.
+>
+> The content below is kept for historical reference only.
+
 <div style="display: flex; justify-content: space-between;">
   <img src=".ci_badges/npm-version-badge.svg" />
   <img src=".ci_badges/npm-dependencies-badge.svg" />
